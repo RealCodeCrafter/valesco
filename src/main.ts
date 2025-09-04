@@ -26,6 +26,6 @@ async function bootstrap() {
   });
 
   const port = process.env.PORT || 8000;
-  await app.listen("/var/www/valesco-web/data/nodejs/0.sock");
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
