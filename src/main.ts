@@ -3,6 +3,10 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
+import * as dotenv from 'dotenv';
+import * as fs from 'fs';
+
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -12,6 +16,7 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
+  // Global validation
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -20,12 +25,15 @@ async function bootstrap() {
     }),
   );
 
+  // CORS
   app.enableCors({
     origin: '*',
     credentials: true,
   });
 
-  const socketPath = '/var/www/valesco-web/data/nodejs/0.sock';
-  await app.listen(socketPath);
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 8000;
+
+   
+  await app.listen(PORT, '0.0.0.0');
 }
 bootstrap();
