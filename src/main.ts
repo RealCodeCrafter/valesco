@@ -5,13 +5,17 @@ import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import * as bodyParser from 'body-parser';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Serve static files for uploads
+   app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
