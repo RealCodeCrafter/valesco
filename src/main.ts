@@ -12,10 +12,6 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-   app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
-
-
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
