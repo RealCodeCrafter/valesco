@@ -8,6 +8,7 @@ import {
   Delete,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-categories.dto';
@@ -16,6 +17,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard, Roles, RolesGuard } from 'src/auth/auth.guard';
 
 @Controller('categories')
 export class CategoriesController {
@@ -24,6 +26,9 @@ export class CategoriesController {
     private readonly configService: ConfigService,
   ) {}
 
+  
+  @Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('img', {
@@ -59,6 +64,9 @@ export class CategoriesController {
     return this.categoriesService.findOne(+id);
   }
 
+  
+  @Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @UseInterceptors(
     FileInterceptor('img', {
@@ -85,6 +93,9 @@ export class CategoriesController {
     return this.categoriesService.update(+id, updateCategoryDto, imgPath);
   }
 
+  
+  @Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);

@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   BadRequestException,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-products.dto';
@@ -22,6 +23,7 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { Product } from './entities/products.entity';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard, Roles, RolesGuard } from 'src/auth/auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -30,6 +32,9 @@ export class ProductsController {
     private readonly configService: ConfigService,
   ) {}
 
+  
+    @Roles('admin')
+  @UseGuards(AuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 3 }], {
@@ -85,6 +90,9 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  
+  @Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 3 }], {
@@ -123,6 +131,9 @@ export class ProductsController {
     return this.productsService.update(parsedId, updateProductDto, images);
   }
 
+  
+  @Roles('admin')
+@UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     const parsedId = parseInt(id, 10);
