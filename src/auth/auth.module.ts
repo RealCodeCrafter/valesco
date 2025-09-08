@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
-import { Admin } from '../admin/entities/admin.entity';
+import { Admin } from './entities/admin.entity';
 
 dotenv.config();
 
