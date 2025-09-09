@@ -107,8 +107,9 @@ export class ProductsService {
     }
 
     return await query
-      .orderBy('product.updateOrder', 'DESC') // Most recently updated first
-      .addOrderBy('product.id', 'ASC') // Fallback for same updateOrder
+      .orderBy('(CASE WHEN product.updateOrder > 0 THEN 0 ELSE 1 END)', 'ASC')
+      .addOrderBy('product.updateOrder', 'ASC')
+      .addOrderBy('product.id', 'ASC')
       .getMany();
   }
 
@@ -201,7 +202,7 @@ export class ProductsService {
       }
     });
   }
-  
+
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
     await this.productsRepository.remove(product);
