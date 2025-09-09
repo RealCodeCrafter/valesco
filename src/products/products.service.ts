@@ -18,7 +18,7 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto, images?: { image?: string[] }): Promise<Product> {
     return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-      // Validate category
+      
       const category = await this.categoriesService.findOne(createProductDto.categoryId);
       if (!category) {
         throw new BadRequestException(`Category with ID ${createProductDto.categoryId} does not exist`);
@@ -129,13 +129,11 @@ export class ProductsService {
   return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
     const product = await this.findOne(id);
 
-    // Eng yuqori updateOrder ni topish
     const maxUpdateOrder = await transactionalEntityManager
       .createQueryBuilder(Product, 'product')
       .select('COALESCE(MAX(product.updateOrder), 0)', 'maxOrder')
       .getRawOne();
 
-    // updateOrder ni yangilash
     product.updateOrder = maxUpdateOrder.maxOrder + 1;
 
     if (updateProductDto.title) product.title = updateProductDto.title;
