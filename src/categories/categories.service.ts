@@ -23,9 +23,15 @@ export class CategoriesService {
     return this.categoriesRepository.save(category);
   }
 
-  async findAll(): Promise<Category[]> {
-    return this.categoriesRepository.find();
+   async findAll(): Promise<Category[]> {
+    return this.categoriesRepository
+      .createQueryBuilder('category')
+      .orderBy('category.updateOrder', 'ASC') // Yangilanish tartibi bo‘yicha
+      .addOrderBy('category.id', 'ASC') // Fallback sifatida
+      .getMany();
   }
+
+
 async findOne(id: number): Promise<Category> {
   const category = await this.categoriesRepository.findOne({
     where: { id },
@@ -40,18 +46,29 @@ async findOne(id: number): Promise<Category> {
 }
 
 
-  async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string): Promise<Category> {
-    const category = await this.findOne(id);
-    if (updateCategoryDto.title_ru || updateCategoryDto.title_en) {
-      category.title = {
-        ru: updateCategoryDto.title_ru || category.title.ru,
-        en: updateCategoryDto.title_en || category.title.en,
-      };
-    }
-    if (imgPath) {
-      category.img = imgPath;
-    }
-    return this.categoriesRepository.save(category);
+async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string): Promise<Category> {
+    return await this.categoriesRepository.manager.transaction(async (transactionalEntityManager) => {
+      const category = await this.findOne(id);
+
+      const maxUpdateOrder = await transactionalEntityManager
+        .createQueryBuilder(Category, 'category')
+        .select('COALESCE(MAX(category.updateOrder), 0)', 'maxOrder')
+        .getRawOne();
+
+      category.updateOrder = maxUpdateOrder.maxOrder + 1;
+
+      if (updateCategoryDto.title_ru || updateCategoryDto.title_en) {
+        category.title = {
+          ru: updateCategoryDto.title_ru || category.title.ru,
+          en: updateCategoryDto.title_en || category.title.en,
+        };
+      }
+      if (imgPath) {
+        category.img = imgPath;
+      }
+
+      return transactionalEntityManager.save(category);
+    });
   }
 
   async remove(id: number): Promise<void> {

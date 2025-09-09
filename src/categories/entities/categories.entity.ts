@@ -17,4 +17,7 @@ export class Category {
 
   @OneToMany(() => Product, (product) => product.category)
   products: Product[];
+
+  @Column({ type: 'int', default: 0 })
+  updateOrder: number;
 }

@@ -106,14 +106,11 @@ export class ProductsService {
     query.andWhere(conditions.join(' AND '), parameters);
   }
 
-  const sql = query.getSql();
-  console.log('Generated SQL:', sql);
-  console.log('Query parameters:', parameters);
-  const results = await query.getMany();
-  console.log('Query results:', results); 
-  return results;
+  return await query
+    .orderBy('product.updateOrder', 'ASC') // Yangilanish tartibi bo‘yicha
+    .addOrderBy('product.id', 'ASC') // Fallback sifatida
+    .getMany();
 }
-
   async findOne(id: number): Promise<Product> {
     if (isNaN(id) || id <= 0) {
       throw new BadRequestException('Invalid product ID: ID must be a positive number');
@@ -129,72 +126,81 @@ export class ProductsService {
   }
 
   async update(id: number, updateProductDto: UpdateProductDto, images?: { image?: string[] }): Promise<Product> {
-    return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-      const product = await this.findOne(id);
+  return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
+    const product = await this.findOne(id);
 
-      if (updateProductDto.title) product.title = updateProductDto.title;
-      if (updateProductDto.description_ru !== undefined) product.description_ru = updateProductDto.description_ru || '';
-      if (updateProductDto.description_en !== undefined) product.description_en = updateProductDto.description_en || '';
-      if (updateProductDto.specifications) product.specifications = updateProductDto.specifications;
-      if (images?.image) product.image = images.image;
-      if (updateProductDto.sae) product.sae = updateProductDto.sae;
-      if (updateProductDto.density) product.density = updateProductDto.density;
-      if (updateProductDto.kinematic_one) product.kinematic_one = updateProductDto.kinematic_one;
-      if (updateProductDto.kinematic_two) product.kinematic_two = updateProductDto.kinematic_two;
-      if (updateProductDto.viscosity) product.viscosity = updateProductDto.viscosity;
-      if (updateProductDto.flash) product.flash = updateProductDto.flash;
-      if (updateProductDto.temperature) product.temperature = updateProductDto.temperature;
-      if (updateProductDto.base) product.base = updateProductDto.base;
-      if (updateProductDto.info) product.info = updateProductDto.info;
+    // Eng yuqori updateOrder ni topish
+    const maxUpdateOrder = await transactionalEntityManager
+      .createQueryBuilder(Product, 'product')
+      .select('COALESCE(MAX(product.updateOrder), 0)', 'maxOrder')
+      .getRawOne();
 
-      if (updateProductDto.packing && updateProductDto.packing.length > 0) {
-        const articles = updateProductDto.packing.map((item) => item.article);
-        const duplicateArticles = articles.filter((item, index) => articles.indexOf(item) !== index);
-        if (duplicateArticles.length > 0) {
-          throw new BadRequestException(`Duplicate articles found in packing: ${duplicateArticles.join(', ')}`);
-        }
+    // updateOrder ni yangilash
+    product.updateOrder = maxUpdateOrder.maxOrder + 1;
 
-        for (const item of updateProductDto.packing) {
-          if (!item.volume || !item.article) {
-            throw new BadRequestException('Invalid packing item: volume and article are required');
-          }
-          const existingProduct = await transactionalEntityManager
-            .createQueryBuilder(Product, 'product')
-            .where('product.packing @> :article AND product.id != :id', { article: [{ article: item.article }], id })
-            .getOne();
-          if (existingProduct) {
-            throw new BadRequestException(`Article ${item.article} already exists in another product`);
-          }
-        }
-        product.packing = updateProductDto.packing;
+    if (updateProductDto.title) product.title = updateProductDto.title;
+    if (updateProductDto.description_ru !== undefined) product.description_ru = updateProductDto.description_ru || '';
+    if (updateProductDto.description_en !== undefined) product.description_en = updateProductDto.description_en || '';
+    if (updateProductDto.specifications) product.specifications = updateProductDto.specifications;
+    if (images?.image) product.image = images.image;
+    if (updateProductDto.sae) product.sae = updateProductDto.sae;
+    if (updateProductDto.density) product.density = updateProductDto.density;
+    if (updateProductDto.kinematic_one) product.kinematic_one = updateProductDto.kinematic_one;
+    if (updateProductDto.kinematic_two) product.kinematic_two = updateProductDto.kinematic_two;
+    if (updateProductDto.viscosity) product.viscosity = updateProductDto.viscosity;
+    if (updateProductDto.flash) product.flash = updateProductDto.flash;
+    if (updateProductDto.temperature) product.temperature = updateProductDto.temperature;
+    if (updateProductDto.base) product.base = updateProductDto.base;
+    if (updateProductDto.info) product.info = updateProductDto.info;
+
+    if (updateProductDto.packing && updateProductDto.packing.length > 0) {
+      const articles = updateProductDto.packing.map((item) => item.article);
+      const duplicateArticles = articles.filter((item, index) => articles.indexOf(item) !== index);
+      if (duplicateArticles.length > 0) {
+        throw new BadRequestException(`Duplicate articles found in packing: ${duplicateArticles.join(', ')}`);
       }
 
-      if (updateProductDto.categoryId) {
-        const category = await this.categoriesService.findOne(updateProductDto.categoryId);
-        if (!category) {
-          throw new BadRequestException(`Category with ID ${updateProductDto.categoryId} does not exist`);
+      for (const item of updateProductDto.packing) {
+        if (!item.volume || !item.article) {
+          throw new BadRequestException('Invalid packing item: volume and article are required');
         }
-        product.category = category;
+        const existingProduct = await transactionalEntityManager
+          .createQueryBuilder(Product, 'product')
+          .where('product.packing @> :article AND product.id != :id', { article: [{ article: item.article }], id })
+          .getOne();
+        if (existingProduct) {
+          throw new BadRequestException(`Article ${item.article} already exists in another product`);
+        }
       }
+      product.packing = updateProductDto.packing;
+    }
 
-      try {
-        const savedProduct = await transactionalEntityManager.save(Product, product);
-        const result = await transactionalEntityManager.findOne(Product, {
-          where: { id: savedProduct.id },
-          relations: ['category'],
-        });
-        if (!result) {
-          throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
-        }
-        return result;
-      } catch (error) {
-        if (error instanceof QueryFailedError && error.message.includes('invalid input syntax for type json')) {
-          throw new BadRequestException('Invalid JSON format in packing field');
-        }
-        throw error;
+    if (updateProductDto.categoryId) {
+      const category = await this.categoriesService.findOne(updateProductDto.categoryId);
+      if (!category) {
+        throw new BadRequestException(`Category with ID ${updateProductDto.categoryId} does not exist`);
       }
-    });
-  }
+      product.category = category;
+    }
+
+    try {
+      const savedProduct = await transactionalEntityManager.save(Product, product);
+      const result = await transactionalEntityManager.findOne(Product, {
+        where: { id: savedProduct.id },
+        relations: ['category'],
+      });
+      if (!result) {
+        throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
+      }
+      return result;
+    } catch (error) {
+      if (error instanceof QueryFailedError && error.message.includes('invalid input syntax for type json')) {
+        throw new BadRequestException('Invalid JSON format in packing field');
+      }
+      throw error;
+    }
+  });
+}
 
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);

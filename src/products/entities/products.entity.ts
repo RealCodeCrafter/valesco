@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { Category } from '../../categories/entities/categories.entity';
 
 @Entity('products')
@@ -53,4 +53,10 @@ export class Product {
 
   @ManyToOne(() => Category, (category) => category.products, { onDelete: 'CASCADE' })
   category: Category;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Column({ type: 'int', default: 0 })
+  updateOrder: number;
 }
