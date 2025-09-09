@@ -27,8 +27,6 @@ export class CategoriesController {
   ) {}
 
   
-  @Roles('admin')
-@UseGuards(AuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(
     FileInterceptor('img', {
@@ -65,8 +63,6 @@ export class CategoriesController {
   }
 
   
-  @Roles('admin')
-@UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @UseInterceptors(
     FileInterceptor('img', {
@@ -94,8 +90,6 @@ export class CategoriesController {
   }
 
   
-  @Roles('admin')
-@UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);

@@ -33,8 +33,6 @@ export class ProductsController {
   ) {}
 
   
-    @Roles('admin')
-  @UseGuards(AuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 3 }], {
@@ -91,8 +89,6 @@ export class ProductsController {
   }
 
   
-  @Roles('admin')
-@UseGuards(AuthGuard, RolesGuard)
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 3 }], {
@@ -132,8 +128,6 @@ export class ProductsController {
   }
 
   
-  @Roles('admin')
-@UseGuards(AuthGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     const parsedId = parseInt(id, 10);
