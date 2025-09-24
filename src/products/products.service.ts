@@ -16,12 +16,24 @@ export class ProductsService {
     private categoriesService: CategoriesService,
   ) {}
 
-  async create(createProductDto: CreateProductDto, images?: { image?: string[] }): Promise<Product> {
+  async create(createProductDto: CreateProductDto, files?: { image?: Express.Multer.File[] }): Promise<Product> {
     return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-      
       const category = await this.categoriesService.findOne(createProductDto.categoryId);
       if (!category) {
         throw new BadRequestException(`Category with ID ${createProductDto.categoryId} does not exist`);
+      }
+
+      const images: string[] = [];
+      const documents: string[] = [];
+
+      if (files?.image) {
+        files.image.forEach(file => {
+          if (file.mimetype === 'application/pdf') {
+            documents.push(file.filename);
+          } else {
+            images.push(file.filename);
+          }
+        });
       }
 
       const product = transactionalEntityManager.create(Product, {
@@ -29,7 +41,8 @@ export class ProductsService {
         description_ru: createProductDto.description_ru || '',
         description_en: createProductDto.description_en || '',
         specifications: createProductDto.specifications || [],
-        image: images?.image || [],
+        image: images,
+        documents: documents,
         sae: createProductDto.sae || [],
         density: createProductDto.density || [],
         kinematic_one: createProductDto.kinematic_one || [],
@@ -113,7 +126,6 @@ export class ProductsService {
       .getMany();
   }
 
-
   async findOne(id: number): Promise<Product> {
     if (isNaN(id) || id <= 0) {
       throw new BadRequestException('Invalid product ID: ID must be a positive number');
@@ -128,7 +140,7 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto, images?: { image?: string[] }): Promise<Product> {
+  async update(id: number, updateProductDto: UpdateProductDto, files?: { image?: Express.Multer.File[] }): Promise<Product> {
     return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
       const product = await this.findOne(id);
 
@@ -143,7 +155,23 @@ export class ProductsService {
       if (updateProductDto.description_ru !== undefined) product.description_ru = updateProductDto.description_ru || '';
       if (updateProductDto.description_en !== undefined) product.description_en = updateProductDto.description_en || '';
       if (updateProductDto.specifications) product.specifications = updateProductDto.specifications;
-      if (images?.image) product.image = images.image;
+
+      if (files?.image) {
+        const images: string[] = product.image || [];
+        const documents: string[] = product.documents || [];
+
+        files.image.forEach(file => {
+          if (file.mimetype === 'application/pdf') {
+            documents.push(file.filename);
+          } else {
+            images.push(file.filename);
+          }
+        });
+
+        product.image = images;
+        product.documents = documents;
+      }
+
       if (updateProductDto.sae) product.sae = updateProductDto.sae;
       if (updateProductDto.density) product.density = updateProductDto.density;
       if (updateProductDto.kinematic_one) product.kinematic_one = updateProductDto.kinematic_one;
@@ -208,17 +236,50 @@ export class ProductsService {
     await this.productsRepository.remove(product);
   }
 
-  
-async search(searchDto: SearchProductDto): Promise<Product[]> {
-  if (!searchDto.query) {
-    return this.findAll({});
+  async search(searchDto: SearchProductDto): Promise<Product[]> {
+    if (!searchDto.query) {
+      return this.findAll({});
+    }
+
+    return this.productsRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .where('product.title ILIKE :query', { query: `%${searchDto.query}%` })
+      .limit(50)
+      .getMany();
   }
 
-  return this.productsRepository
-    .createQueryBuilder('product')
-    .leftJoinAndSelect('product.category', 'category')
-    .where('product.title ILIKE :query', { query: `%${searchDto.query}%` })
-    .limit(50) 
-    .getMany();
+  async removeFile(id: number, fileUrl: string, fileType: 'image' | 'document'): Promise<Product> {
+  return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
+    const product = await this.findOne(id);
+
+    if (fileType === 'image') {
+      const updatedImages = product.image.filter(url => url !== fileUrl);
+      if (updatedImages.length === product.image.length) {
+        throw new BadRequestException(`Image with URL ${fileUrl} not found in product`);
+      }
+      product.image = updatedImages;
+    } else if (fileType === 'document') {
+      const updatedDocuments = product.documents.filter(url => url !== fileUrl);
+      if (updatedDocuments.length === product.documents.length) {
+        throw new BadRequestException(`Document with URL ${fileUrl} not found in product`);
+      }
+      product.documents = updatedDocuments;
+    }
+
+    try {
+      const savedProduct = await transactionalEntityManager.save(Product, product);
+      const result = await transactionalEntityManager.findOne(Product, {
+        where: { id: savedProduct.id },
+        relations: ['category'],
+      });
+      if (!result) {
+        throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
+      }
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  });
 }
 }

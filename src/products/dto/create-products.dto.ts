@@ -38,6 +38,11 @@ export class CreateProductDto {
   @IsOptional()
   @Transform(({ value }) => toStringArray(value))
   @IsArray()
+  documents?: string[];
+
+  @IsOptional()
+  @Transform(({ value }) => toStringArray(value))
+  @IsArray()
   sae?: string[];
 
   @IsOptional()

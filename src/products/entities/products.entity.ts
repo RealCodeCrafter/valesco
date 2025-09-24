@@ -22,6 +22,9 @@ export class Product {
   image: string[];
 
   @Column('jsonb', { nullable: true, default: () => "'[]'::jsonb" })
+  documents: string[];
+
+  @Column('jsonb', { nullable: true, default: () => "'[]'::jsonb" })
   sae: string[];
 
   @Column('jsonb', { nullable: true, default: () => "'[]'::jsonb" })

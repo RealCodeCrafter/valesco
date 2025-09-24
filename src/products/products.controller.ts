@@ -32,7 +32,6 @@ export class ProductsController {
     private readonly configService: ConfigService,
   ) {}
 
-  
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
@@ -50,17 +49,7 @@ export class ProductsController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: { image?: Express.Multer.File[] },
   ): Promise<Product> {
-    const baseUrl = this.configService.get<string>('BASE_URL');
-
-    const images = {
-      image: files?.image
-        ? files.image.map(
-            (file) => `${baseUrl}/uploads/products/${file.filename}`,
-          )
-        : [],
-    };
-
-    return this.productsService.create(createProductDto, images);
+    return this.productsService.create(createProductDto, files);
   }
 
   @Get()
@@ -88,7 +77,6 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
-  
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
@@ -114,20 +102,9 @@ export class ProductsController {
       );
     }
 
-    const baseUrl = this.configService.get<string>('BASE_URL');
-
-    const images = files?.image
-      ? {
-          image: files.image.map(
-            (file) => `${baseUrl}/uploads/products/${file.filename}`,
-          ),
-        }
-      : undefined;
-
-    return this.productsService.update(parsedId, updateProductDto, images);
+    return this.productsService.update(parsedId, updateProductDto, files);
   }
 
-  
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     const parsedId = parseInt(id, 10);
@@ -138,4 +115,16 @@ export class ProductsController {
     }
     return this.productsService.remove(parsedId);
   }
+
+  @Delete(':id/file')
+async removeFile(
+  @Param('id', ParseIntPipe) id: number,
+  @Body('fileUrl') fileUrl: string,
+  @Body('fileType') fileType: 'image' | 'document',
+): Promise<Product> {
+  if (!fileUrl || !['image', 'document'].includes(fileType)) {
+    throw new BadRequestException('fileUrl and valid fileType (image or document) are required');
+  }
+  return this.productsService.removeFile(id, fileUrl, fileType);
+}
 }
