@@ -116,15 +116,16 @@ export class ProductsController {
     return this.productsService.remove(parsedId);
   }
 
-  @Delete(':id/file')
-async removeFile(
-  @Param('id', ParseIntPipe) id: number,
-  @Body('fileUrl') fileUrl: string,
-  @Body('fileType') fileType: 'image' | 'document',
-): Promise<Product> {
-  if (!fileUrl || !['image', 'document'].includes(fileType)) {
-    throw new BadRequestException('fileUrl and valid fileType (image or document) are required');
+   @Delete(':id/file')
+  @UseInterceptors(FileFieldsInterceptor([]))
+  async removeFile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('fileUrl') fileUrl: string,
+    @Body('fileType') fileType: 'image' | 'document',
+  ): Promise<Product> {
+    if (!fileUrl || !['image', 'document'].includes(fileType)) {
+      throw new BadRequestException('fileUrl and valid fileType (image or document) are required');
+    }
+    return this.productsService.removeFile(id, fileUrl, fileType);
   }
-  return this.productsService.removeFile(id, fileUrl, fileType);
-}
 }
