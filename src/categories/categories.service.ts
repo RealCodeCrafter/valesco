@@ -75,25 +75,24 @@ async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string)
     });
   }
 
-async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<void> {
   const category = await this.findOne(id);
 
   if (category.img) {
-    try {
-      const fileName = category.img.split('/').pop(); // faqat fayl nomini ajratamiz
-      if (fileName) {
-        const filePath = join(__dirname, '..', '..', 'uploads', 'categories', fileName);
+    const fileName = category.img.split('/').pop();
+    if (fileName) {
+      const filePath = join(__dirname, '..', '..', 'uploads', 'categories', fileName);
+      try {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
-          console.log(`✅ Deleted file: ${filePath}`);
         }
-      }
-    } catch (error) {
-      console.error(`❌ Failed to delete file for category ${id}:`, error);
+      } catch {}
     }
+    category.img = '';
   }
 
   await this.categoriesRepository.remove(category);
 }
+
 
 }

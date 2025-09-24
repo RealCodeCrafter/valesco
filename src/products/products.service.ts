@@ -213,40 +213,6 @@ export class ProductsService {
   });
 }
 
-async remove(id: number): Promise<void> {
-  return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-    const product = await this.findOne(id);
-
-    if (!product) {
-      throw new NotFoundException(`Product with id ${id} not found`);
-    }
-
-    const deleteFiles = (files: string[] | null | undefined, folder: string) => {
-      if (!files || files.length === 0) return;
-
-      files.forEach(url => {
-        const fileName = url.split('/').pop() ?? '';
-        const fullPath = join(__dirname, '..', '..', 'uploads', folder, fileName);
-
-        try {
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-            console.log(`Deleted file: ${fullPath}`);
-          }
-        } catch (error) {
-          console.error(`Failed to delete file ${fullPath}:`, error);
-        }
-      });
-    };
-
-    deleteFiles(product.image, 'products');
-    deleteFiles(product.documents, 'products');
-
-    await transactionalEntityManager.remove(Product, product);
-  });
-}
-
-
   async search(searchDto: SearchProductDto): Promise<Product[]> {
     if (!searchDto.query) {
       return this.findAll({});
@@ -260,23 +226,66 @@ async remove(id: number): Promise<void> {
       .getMany();
   }
 
-  async removeFile(id: number, fileUrl: string, fileType: 'image' | 'document'): Promise<Product> {
-    return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
+  async remove(id: number): Promise<void> {
+  return await this.productsRepository.manager.transaction(
+    async (transactionalEntityManager) => {
+      const product = await this.findOne(id);
+      if (!product) {
+        throw new NotFoundException(`Product with id ${id} not found`);
+      }
+
+      const cleanFiles = (
+        files: string[] | null | undefined,
+        folder: string,
+      ): string[] => {
+        if (!files || files.length === 0) return [];
+        return files.filter((url) => {
+          const fileName = url.split('/').pop() ?? '';
+          const fullPath = join(
+            __dirname,
+            '..',
+            '..',
+            'uploads',
+            folder,
+            fileName,
+          );
+          try {
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+              return false;
+            } else {
+              return false;
+            }
+          } catch {
+            return true;
+          }
+        });
+      };
+
+      product.image = cleanFiles(product.image, 'products');
+      product.documents = cleanFiles(product.documents, 'products');
+
+      await transactionalEntityManager.remove(Product, product);
+    },
+  );
+}
+
+async removeFile(
+  id: number,
+  fileUrl: string,
+  fileType: 'image' | 'document',
+): Promise<Product> {
+  return await this.productsRepository.manager.transaction(
+    async (transactionalEntityManager) => {
       const product = await this.findOne(id);
 
       let updatedImages = product.image;
       let updatedDocuments = product.documents;
 
       if (fileType === 'image') {
-        updatedImages = product.image.filter(url => url !== fileUrl);
-        if (updatedImages.length === product.image.length) {
-          throw new BadRequestException(`Image with URL ${fileUrl} not found in product`);
-        }
+        updatedImages = product.image.filter((url) => url !== fileUrl);
       } else if (fileType === 'document') {
-        updatedDocuments = product.documents.filter(url => url !== fileUrl);
-        if (updatedImages.length === product.image.length) {
-          throw new BadRequestException(`Document with URL ${fileUrl} not found in product`);
-        }
+        updatedDocuments = product.documents.filter((url) => url !== fileUrl);
       }
 
       const fileName = fileUrl.split('/').pop() ?? '';
@@ -285,26 +294,24 @@ async remove(id: number): Promise<void> {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
-      } catch (error) {
-        console.error(`Failed to delete file ${filePath}:`, error);
-      }
+      } catch {}
 
       product.image = updatedImages;
       product.documents = updatedDocuments;
 
-      try {
-        const savedProduct = await transactionalEntityManager.save(Product, product);
-        const result = await transactionalEntityManager.findOne(Product, {
-          where: { id: savedProduct.id },
-          relations: ['category'],
-        });
-        if (!result) {
-          throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
-        }
-        return result;
-      } catch (error) {
-        throw error;
+      const savedProduct = await transactionalEntityManager.save(Product, product);
+      const result = await transactionalEntityManager.findOne(Product, {
+        where: { id: savedProduct.id },
+        relations: ['category'],
+      });
+      if (!result) {
+        throw new NotFoundException(
+          `Failed to retrieve updated product with ID ${savedProduct.id}`,
+        );
       }
-    });
-  }
+      return result;
+    },
+  );
+}
+
 }

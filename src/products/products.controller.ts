@@ -130,24 +130,25 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    const parsedId = parseInt(id, 10);
-    if (isNaN(parsedId) || parsedId <= 0) {
-      throw new BadRequestException('Invalid product ID: ID must be a positive number');
-    }
-    return this.productsService.remove(parsedId);
+async remove(@Param('id') id: string): Promise<void> {
+  const parsedId = parseInt(id, 10);
+  if (isNaN(parsedId) || parsedId <= 0) {
+    throw new BadRequestException('Invalid product ID: ID must be a positive number');
   }
+  return this.productsService.remove(parsedId);
+}
 
-  @Delete(':id/file')
-  @UseInterceptors(FileFieldsInterceptor([]))
-  async removeFile(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('fileUrl') fileUrl: string,
-    @Body('fileType') fileType: 'image' | 'document',
-  ): Promise<Product> {
-    if (!fileUrl || !['image', 'document'].includes(fileType)) {
-      throw new BadRequestException('fileUrl and valid fileType (image or document) are required');
-    }
-    return this.productsService.removeFile(id, fileUrl, fileType);
+@Delete(':id/file')
+@UseInterceptors(FileFieldsInterceptor([]))
+async removeFile(
+  @Param('id', ParseIntPipe) id: number,
+  @Body('fileUrl') fileUrl: string,
+  @Body('fileType') fileType: 'image' | 'document',
+): Promise<Product> {
+  if (!fileUrl || !['image', 'document'].includes(fileType)) {
+    throw new BadRequestException('fileUrl and valid fileType (image or document) are required');
   }
+  return this.productsService.removeFile(id, fileUrl, fileType);
+}
+
 }
