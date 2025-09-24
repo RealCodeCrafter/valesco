@@ -18,24 +18,11 @@ export class ProductsService {
     private categoriesService: CategoriesService,
   ) {}
 
-  async create(createProductDto: CreateProductDto, files?: { image?: Express.Multer.File[] }): Promise<Product> {
+  async create(createProductDto: CreateProductDto, uploadedFiles?: { images?: string[], documents?: string[] }): Promise<Product> {
     return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
       const category = await this.categoriesService.findOne(createProductDto.categoryId);
       if (!category) {
         throw new BadRequestException(`Category with ID ${createProductDto.categoryId} does not exist`);
-      }
-
-      const images: string[] = [];
-      const documents: string[] = [];
-
-      if (files?.image) {
-        files.image.forEach(file => {
-          if (file.mimetype === 'application/pdf') {
-            documents.push(file.filename);
-          } else {
-            images.push(file.filename);
-          }
-        });
       }
 
       const product = transactionalEntityManager.create(Product, {
@@ -43,8 +30,8 @@ export class ProductsService {
         description_ru: createProductDto.description_ru || '',
         description_en: createProductDto.description_en || '',
         specifications: createProductDto.specifications || [],
-        image: images,
-        documents: documents,
+        image: uploadedFiles?.images || [],
+        documents: uploadedFiles?.documents || [],
         sae: createProductDto.sae || [],
         density: createProductDto.density || [],
         kinematic_one: createProductDto.kinematic_one || [],
@@ -142,134 +129,127 @@ export class ProductsService {
     return product;
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto, files?: { image?: Express.Multer.File[] }): Promise<Product> {
-    return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-      const product = await this.findOne(id);
-
-      const maxUpdateOrder = await transactionalEntityManager
-        .createQueryBuilder(Product, 'product')
-        .select('COALESCE(MAX(product.updateOrder), 0)', 'maxOrder')
-        .getRawOne();
-
-      product.updateOrder = maxUpdateOrder.maxOrder + 1;
-
-      if (updateProductDto.title) product.title = updateProductDto.title;
-      if (updateProductDto.description_ru !== undefined) product.description_ru = updateProductDto.description_ru || '';
-      if (updateProductDto.description_en !== undefined) product.description_en = updateProductDto.description_en || '';
-      if (updateProductDto.specifications) product.specifications = updateProductDto.specifications;
-
-      if (files?.image) {
-        const images: string[] = product.image || [];
-        const documents: string[] = product.documents || [];
-
-        files.image.forEach(file => {
-          if (file.mimetype === 'application/pdf') {
-            documents.push(file.filename);
-          } else {
-            images.push(file.filename);
-          }
-        });
-
-        product.image = images;
-        product.documents = documents;
-      }
-
-      if (updateProductDto.sae) product.sae = updateProductDto.sae;
-      if (updateProductDto.density) product.density = updateProductDto.density;
-      if (updateProductDto.kinematic_one) product.kinematic_one = updateProductDto.kinematic_one;
-      if (updateProductDto.kinematic_two) product.kinematic_two = updateProductDto.kinematic_two;
-      if (updateProductDto.viscosity) product.viscosity = updateProductDto.viscosity;
-      if (updateProductDto.flash) product.flash = updateProductDto.flash;
-      if (updateProductDto.temperature) product.temperature = updateProductDto.temperature;
-      if (updateProductDto.base) product.base = updateProductDto.base;
-      if (updateProductDto.info) product.info = updateProductDto.info;
-
-      if (updateProductDto.packing && updateProductDto.packing.length > 0) {
-        const articles = updateProductDto.packing.map((item) => item.article);
-        const duplicateArticles = articles.filter((item, index) => articles.indexOf(item) !== index);
-        if (duplicateArticles.length > 0) {
-          throw new BadRequestException(`Duplicate articles found in packing: ${duplicateArticles.join(', ')}`);
-        }
-
-        for (const item of updateProductDto.packing) {
-          if (!item.volume || !item.article) {
-            throw new BadRequestException('Invalid packing item: volume and article are required');
-          }
-          const existingProduct = await transactionalEntityManager
-            .createQueryBuilder(Product, 'product')
-            .where('product.packing @> :article AND product.id != :id', { article: [{ article: item.article }], id })
-            .getOne();
-          if (existingProduct) {
-            throw new BadRequestException(`Article ${item.article} already exists in another product`);
-          }
-        }
-        product.packing = updateProductDto.packing;
-      }
-
-      if (updateProductDto.categoryId) {
-        const category = await this.categoriesService.findOne(updateProductDto.categoryId);
-        if (!category) {
-          throw new BadRequestException(`Category with ID ${updateProductDto.categoryId} does not exist`);
-        }
-        product.category = category;
-      }
-
-      try {
-        const savedProduct = await transactionalEntityManager.save(Product, product);
-        const result = await transactionalEntityManager.findOne(Product, {
-          where: { id: savedProduct.id },
-          relations: ['category'],
-        });
-        if (!result) {
-          throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
-        }
-        return result;
-      } catch (error) {
-        if (error instanceof QueryFailedError && error.message.includes('invalid input syntax for type json')) {
-          throw new BadRequestException('Invalid JSON format in packing field');
-        }
-        throw error;
-      }
-    });
-  }
-
-  async remove(id: number): Promise<void> {
+  async update(id: number, updateProductDto: UpdateProductDto, uploadedFiles?: { images?: string[], documents?: string[] }): Promise<Product> {
   return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
     const product = await this.findOne(id);
 
-    const filePath = join(__dirname, '..', '..', 'Uploads', 'products');
+    const maxUpdateOrder = await transactionalEntityManager
+      .createQueryBuilder(Product, 'product')
+      .select('COALESCE(MAX(product.updateOrder), 0)', 'maxOrder')
+      .getRawOne();
 
-    if (product.image && product.image.length > 0) {
-      product.image.forEach(url => {
-        const fileName = url.split('/').pop() ?? "";
-        const fullPath = join(filePath, fileName);
-        try {
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-          }
-        } catch (error) {
-          console.error(`Failed to delete file ${fullPath}:`, error);
-        }
-      });
+    product.updateOrder = maxUpdateOrder.maxOrder + 1;
+
+    if (updateProductDto.title) product.title = updateProductDto.title;
+    if (updateProductDto.description_ru !== undefined) product.description_ru = updateProductDto.description_ru || '';
+    if (updateProductDto.description_en !== undefined) product.description_en = updateProductDto.description_en || '';
+    if (updateProductDto.specifications) product.specifications = updateProductDto.specifications;
+
+    if (uploadedFiles) {
+      if (uploadedFiles.images && uploadedFiles.images.length > 0) {
+        product.image = [...(product.image || []), ...uploadedFiles.images];
+      }
+      if (uploadedFiles.documents && uploadedFiles.documents.length > 0) {
+        product.documents = [...(product.documents || []), ...uploadedFiles.documents];
+      }
     }
 
-    if (product.documents && product.documents.length > 0) {
-      product.documents.forEach(url => {
-        const fileName = url.split('/').pop() ?? "";
-        const fullPath = join(filePath, fileName);
-        try {
-          if (fs.existsSync(fullPath)) {
-            fs.unlinkSync(fullPath);
-          }
-        } catch (error) {
-          console.error(`Failed to delete file ${fullPath}:`, error);
+    if (updateProductDto.sae) product.sae = updateProductDto.sae;
+    if (updateProductDto.density) product.density = updateProductDto.density;
+    if (updateProductDto.kinematic_one) product.kinematic_one = updateProductDto.kinematic_one;
+    if (updateProductDto.kinematic_two) product.kinematic_two = updateProductDto.kinematic_two;
+    if (updateProductDto.viscosity) product.viscosity = updateProductDto.viscosity;
+    if (updateProductDto.flash) product.flash = updateProductDto.flash;
+    if (updateProductDto.temperature) product.temperature = updateProductDto.temperature;
+    if (updateProductDto.base) product.base = updateProductDto.base;
+    if (updateProductDto.info) product.info = updateProductDto.info;
+
+    if (updateProductDto.packing && updateProductDto.packing.length > 0) {
+      const articles = updateProductDto.packing.map((item) => item.article);
+      const duplicateArticles = articles.filter((item, index) => articles.indexOf(item) !== index);
+      if (duplicateArticles.length > 0) {
+        throw new BadRequestException(`Duplicate articles found in packing: ${duplicateArticles.join(', ')}`);
+      }
+
+      for (const item of updateProductDto.packing) {
+        if (!item.volume || !item.article) {
+          throw new BadRequestException('Invalid packing item: volume and article are required');
         }
-      });
+        const existingProduct = await transactionalEntityManager
+          .createQueryBuilder(Product, 'product')
+          .where('product.packing @> :article AND product.id != :id', { article: [{ article: item.article }], id })
+          .getOne();
+        if (existingProduct) {
+          throw new BadRequestException(`Article ${item.article} already exists in another product`);
+        }
+      }
+      product.packing = updateProductDto.packing;
     }
 
-    await transactionalEntityManager.remove(Product, product);
+    if (updateProductDto.categoryId) {
+      const category = await this.categoriesService.findOne(updateProductDto.categoryId);
+      if (!category) {
+        throw new BadRequestException(`Category with ID ${updateProductDto.categoryId} does not exist`);
+      }
+      product.category = category;
+    }
+
+    try {
+      const savedProduct = await transactionalEntityManager.save(Product, product);
+      const result = await transactionalEntityManager.findOne(Product, {
+        where: { id: savedProduct.id },
+        relations: ['category'],
+      });
+      if (!result) {
+        throw new NotFoundException(`Failed to retrieve updated product with ID ${savedProduct.id}`);
+      }
+      return result;
+    } catch (error) {
+      if (error instanceof QueryFailedError && error.message.includes('invalid input syntax for type json')) {
+        throw new BadRequestException('Invalid JSON format in packing field');
+      }
+      throw error;
+    }
   });
 }
+
+  async remove(id: number): Promise<void> {
+    return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
+      const product = await this.findOne(id);
+
+      const filePath = join(__dirname, '..', '..', 'Uploads', 'products');
+
+      if (product.image && product.image.length > 0) {
+        product.image.forEach(url => {
+          const fileName = url.split('/').pop() ?? '';
+          const fullPath = join(filePath, fileName);
+          try {
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+            }
+          } catch (error) {
+            console.error(`Failed to delete file ${fullPath}:`, error);
+          }
+        });
+      }
+
+      if (product.documents && product.documents.length > 0) {
+        product.documents.forEach(url => {
+          const fileName = url.split('/').pop() ?? '';
+          const fullPath = join(filePath, fileName);
+          try {
+            if (fs.existsSync(fullPath)) {
+              fs.unlinkSync(fullPath);
+            }
+          } catch (error) {
+            console.error(`Failed to delete file ${fullPath}:`, error);
+          }
+        });
+      }
+
+      await transactionalEntityManager.remove(Product, product);
+    });
+  }
 
   async search(searchDto: SearchProductDto): Promise<Product[]> {
     if (!searchDto.query) {
@@ -298,13 +278,13 @@ export class ProductsService {
         }
       } else if (fileType === 'document') {
         updatedDocuments = product.documents.filter(url => url !== fileUrl);
-        if (updatedDocuments.length === product.documents.length) {
+        if (updatedImages.length === product.image.length) {
           throw new BadRequestException(`Document with URL ${fileUrl} not found in product`);
         }
       }
 
-      const fileName = fileUrl.split('/').pop() ?? "";
-      const filePath = join(__dirname, '..', '..', 'uploads', 'products', fileName);
+      const fileName = fileUrl.split('/').pop() ?? '';
+      const filePath = join(__dirname, '..', '..', 'Uploads', 'products', fileName);
       try {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);

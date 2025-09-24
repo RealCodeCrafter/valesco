@@ -36,10 +36,9 @@ export class ProductsController {
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
       storage: diskStorage({
-        destination: join(__dirname, '..', '..', 'uploads', 'products'),
+        destination: join(__dirname, '..', '..', 'Uploads', 'products'),
         filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
@@ -49,7 +48,23 @@ export class ProductsController {
     @Body() createProductDto: CreateProductDto,
     @UploadedFiles() files: { image?: Express.Multer.File[] },
   ): Promise<Product> {
-    return this.productsService.create(createProductDto, files);
+    const baseUrl = this.configService.get<string>('BASE_URL');
+    const imageUrls: string[] = [];
+    const documentUrls: string[] = [];
+
+    if (files?.image) {
+      files.image.forEach(file => {
+        const url = `${baseUrl}/uploads/products/${file.filename}`;
+        if (file.mimetype === 'application/pdf') {
+          documentUrls.push(url);
+        } else {
+          imageUrls.push(url);
+        }
+      });
+    }
+
+    const uploadedFiles = { images: imageUrls, documents: documentUrls };
+    return this.productsService.create(createProductDto, uploadedFiles);
   }
 
   @Get()
@@ -60,9 +75,7 @@ export class ProductsController {
   @Get('search')
   async search(@Query() searchDto: SearchProductDto): Promise<Product[]> {
     if (!searchDto.query) {
-      throw new BadRequestException(
-        'Query param is required, e.g. ?query=ZIC',
-      );
+      throw new BadRequestException('Query param is required, e.g. ?query=ZIC');
     }
     return this.productsService.search(searchDto);
   }
@@ -70,9 +83,7 @@ export class ProductsController {
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Product> {
     if (id <= 0) {
-      throw new BadRequestException(
-        'Invalid product ID: ID must be a positive number',
-      );
+      throw new BadRequestException('Invalid product ID: ID must be a positive number');
     }
     return this.productsService.findOne(id);
   }
@@ -81,10 +92,9 @@ export class ProductsController {
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
       storage: diskStorage({
-        destination: join(__dirname, '..', '..', 'uploads', 'products'),
+        destination: join(__dirname, '..', '..', 'Uploads', 'products'),
         filename: (req, file, cb) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
@@ -97,26 +107,38 @@ export class ProductsController {
   ): Promise<Product> {
     const parsedId = parseInt(id, 10);
     if (isNaN(parsedId) || parsedId <= 0) {
-      throw new BadRequestException(
-        'Invalid product ID: ID must be a positive number',
-      );
+      throw new BadRequestException('Invalid product ID: ID must be a positive number');
     }
 
-    return this.productsService.update(parsedId, updateProductDto, files);
+    const baseUrl = this.configService.get<string>('BASE_URL');
+    const imageUrls: string[] = [];
+    const documentUrls: string[] = [];
+
+    if (files?.image) {
+      files.image.forEach(file => {
+        const url = `${baseUrl}/uploads/products/${file.filename}`;
+        if (file.mimetype === 'application/pdf') {
+          documentUrls.push(url);
+        } else {
+          imageUrls.push(url);
+        }
+      });
+    }
+
+    const uploadedFiles = { images: imageUrls, documents: documentUrls };
+    return this.productsService.update(parsedId, updateProductDto, uploadedFiles);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     const parsedId = parseInt(id, 10);
     if (isNaN(parsedId) || parsedId <= 0) {
-      throw new BadRequestException(
-        'Invalid product ID: ID must be a positive number',
-      );
+      throw new BadRequestException('Invalid product ID: ID must be a positive number');
     }
     return this.productsService.remove(parsedId);
   }
 
-   @Delete(':id/file')
+  @Delete(':id/file')
   @UseInterceptors(FileFieldsInterceptor([]))
   async removeFile(
     @Param('id', ParseIntPipe) id: number,
