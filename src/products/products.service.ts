@@ -234,9 +234,42 @@ export class ProductsService {
   }
 
   async remove(id: number): Promise<void> {
+  return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
     const product = await this.findOne(id);
-    await this.productsRepository.remove(product);
-  }
+
+    const filePath = join(__dirname, '..', '..', 'Uploads', 'products');
+
+    if (product.image && product.image.length > 0) {
+      product.image.forEach(url => {
+        const fileName = url.split('/').pop() ?? "";
+        const fullPath = join(filePath, fileName);
+        try {
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+          }
+        } catch (error) {
+          console.error(`Failed to delete file ${fullPath}:`, error);
+        }
+      });
+    }
+
+    if (product.documents && product.documents.length > 0) {
+      product.documents.forEach(url => {
+        const fileName = url.split('/').pop() ?? "";
+        const fullPath = join(filePath, fileName);
+        try {
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+          }
+        } catch (error) {
+          console.error(`Failed to delete file ${fullPath}:`, error);
+        }
+      });
+    }
+
+    await transactionalEntityManager.remove(Product, product);
+  });
+}
 
   async search(searchDto: SearchProductDto): Promise<Product[]> {
     if (!searchDto.query) {
