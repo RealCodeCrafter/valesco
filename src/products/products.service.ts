@@ -226,7 +226,7 @@ async remove(id: number): Promise<void> {
 
       files.forEach(url => {
         const fileName = url.split('/').pop() ?? '';
-        const fullPath = join(__dirname, '..', '..', 'Uploads', folder, fileName);
+        const fullPath = join(__dirname, '..', '..', 'uploads', folder, fileName);
 
         try {
           if (fs.existsSync(fullPath)) {
@@ -280,7 +280,7 @@ async remove(id: number): Promise<void> {
       }
 
       const fileName = fileUrl.split('/').pop() ?? '';
-      const filePath = join(__dirname, '..', '..', 'Uploads', 'products', fileName);
+      const filePath = join(__dirname, '..', '..', 'uploads', 'products', fileName);
       try {
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
