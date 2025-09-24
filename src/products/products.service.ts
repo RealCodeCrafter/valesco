@@ -213,43 +213,39 @@ export class ProductsService {
   });
 }
 
-  async remove(id: number): Promise<void> {
-    return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
-      const product = await this.findOne(id);
+async remove(id: number): Promise<void> {
+  return await this.productsRepository.manager.transaction(async (transactionalEntityManager) => {
+    const product = await this.findOne(id);
 
-      const filePath = join(__dirname, '..', '..', 'Uploads', 'products');
+    if (!product) {
+      throw new NotFoundException(`Product with id ${id} not found`);
+    }
 
-      if (product.image && product.image.length > 0) {
-        product.image.forEach(url => {
-          const fileName = url.split('/').pop() ?? '';
-          const fullPath = join(filePath, fileName);
-          try {
-            if (fs.existsSync(fullPath)) {
-              fs.unlinkSync(fullPath);
-            }
-          } catch (error) {
-            console.error(`Failed to delete file ${fullPath}:`, error);
+    const deleteFiles = (files: string[] | null | undefined, folder: string) => {
+      if (!files || files.length === 0) return;
+
+      files.forEach(url => {
+        const fileName = url.split('/').pop() ?? '';
+        const fullPath = join(__dirname, '..', '..', 'Uploads', folder, fileName);
+
+        try {
+          if (fs.existsSync(fullPath)) {
+            fs.unlinkSync(fullPath);
+            console.log(`Deleted file: ${fullPath}`);
           }
-        });
-      }
+        } catch (error) {
+          console.error(`Failed to delete file ${fullPath}:`, error);
+        }
+      });
+    };
 
-      if (product.documents && product.documents.length > 0) {
-        product.documents.forEach(url => {
-          const fileName = url.split('/').pop() ?? '';
-          const fullPath = join(filePath, fileName);
-          try {
-            if (fs.existsSync(fullPath)) {
-              fs.unlinkSync(fullPath);
-            }
-          } catch (error) {
-            console.error(`Failed to delete file ${fullPath}:`, error);
-          }
-        });
-      }
+    deleteFiles(product.image, 'products');
+    deleteFiles(product.documents, 'products');
 
-      await transactionalEntityManager.remove(Product, product);
-    });
-  }
+    await transactionalEntityManager.remove(Product, product);
+  });
+}
+
 
   async search(searchDto: SearchProductDto): Promise<Product[]> {
     if (!searchDto.query) {

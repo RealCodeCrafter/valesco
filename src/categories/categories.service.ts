@@ -78,10 +78,8 @@ async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string)
 async remove(id: number): Promise<void> {
   const category = await this.findOne(id);
 
-  // Rasm yo‘q bo‘lsa bu qadamni tashlab ketadi
   if (category.img) {
     try {
-      // img: http://localhost:3000/uploads/categories/123.png
       const fileName = category.img.split('/').pop(); // faqat fayl nomini ajratamiz
       if (fileName) {
         const filePath = join(__dirname, '..', '..', 'uploads', 'categories', fileName);
