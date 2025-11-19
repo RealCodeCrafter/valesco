@@ -4,8 +4,7 @@ import { Repository } from 'typeorm';
 import { Category } from './entities/categories.entity';
 import { CreateCategoryDto } from './dto/create-categories.dto';
 import { UpdateCategoryDto } from './dto/update-categories.dto';
-
-  import * as fs from 'fs';
+import * as fs from 'fs';
 import { join } from 'path';
 
 @Injectable()

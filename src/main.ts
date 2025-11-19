@@ -16,7 +16,6 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
 
-  // Global validation
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -25,7 +24,6 @@ async function bootstrap() {
     }),
   );
 
-  // CORS
   app.enableCors({
     origin: '*',
     credentials: true,
