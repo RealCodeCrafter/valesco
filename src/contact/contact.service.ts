@@ -27,9 +27,9 @@ export class ContactService {
       ignoreTLS: false,
       logger: process.env.NODE_ENV === 'development', // Development'da yoqiladi
       debug: process.env.NODE_ENV === 'development', // Development'da yoqiladi
-      connectionTimeout: 120000, // 2 daqiqa (production uchun oshirildi)
-      greetingTimeout: 60000, // 1 daqiqa (production uchun oshirildi)
-      socketTimeout: 120000, // 2 daqiqa (production uchun oshirildi)
+      connectionTimeout: 300000, // 5 daqiqa (production uchun yanada oshirildi)
+      greetingTimeout: 120000, // 2 daqiqa (production uchun yanada oshirildi)
+      socketTimeout: 300000, // 5 daqiqa (production uchun yanada oshirildi)
       // Qo'shimcha sozlamalar
       pool: false,
       maxConnections: 1,
@@ -63,7 +63,8 @@ export class ContactService {
 
     // Retry mexanizmi - birinchi marta xato bo'lsa, qayta sinab ko'ramiz
     let lastError;
-    for (let attempt = 1; attempt <= 2; attempt++) {
+    const maxAttempts = 3; // 3 marta urinamiz
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       // Har safar yangi transporter yaratamiz
       const transporter = this.createTransporter();
       
@@ -77,7 +78,7 @@ export class ContactService {
         const errorMessage = error?.message || 'Noma\'lum xato';
         const errorCode = error?.code || 'UNKNOWN';
         
-        console.log(`⚠️ Email yuborishda xato (urilish ${attempt}/2): ${errorMessage} (${errorCode})`);
+        console.log(`⚠️ Email yuborishda xato (urilish ${attempt}/${maxAttempts}): ${errorMessage} (${errorCode})`);
         
         try {
           transporter.close(); // Xato bo'lsa ham connection'ni yopamiz
@@ -85,9 +86,10 @@ export class ContactService {
           // Ignore close error
         }
         
-        if (attempt < 2) {
-          console.log(`   Qayta sinab ko'rilmoqda...`);
-          await new Promise(resolve => setTimeout(resolve, 3000)); // 3 soniya kutamiz
+        if (attempt < maxAttempts) {
+          const waitTime = attempt * 5000; // Har safar 5 soniya ko'proq kutamiz (5s, 10s, 15s)
+          console.log(`   ${waitTime/1000} soniyadan keyin qayta sinab ko'rilmoqda...`);
+          await new Promise(resolve => setTimeout(resolve, waitTime));
         }
       }
     }
