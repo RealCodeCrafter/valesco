@@ -4,7 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
 import { AuthModule } from './auth/auth.module';
-import { ContactModule } from "./contact/contact.module"   // ← YANGI QO‘SHILDI
+import { ContactModule } from "./contact/contact.module";
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { ContactModule } from "./contact/contact.module"   // ← YANGI QO‘SHI
     ProductsModule,
     CategoriesModule,
     AuthModule,
-    ContactModule   
+    ContactModule,
+    UploadModule,
   ],
 })
 export class AppModule {}
