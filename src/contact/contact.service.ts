@@ -4,13 +4,14 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class ContactService {
-  private transporter;
-
-  constructor() {
-    this.transporter = nodemailer.createTransport({
+  private createTransporter() {
+    const port = Number(process.env.SMTP_PORT) || 25;
+    const useSecure = process.env.SMTP_SECURE === 'true' || port === 465;
+    
+    return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT),
-      secure: true,
+      port: port,
+      secure: useSecure,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -19,15 +20,18 @@ export class ContactService {
         rejectUnauthorized: false,
         minVersion: 'TLSv1.2',
       },
-      logger: true,
-      debug: true,
-      connectionTimeout: 60000,
-      greetingTimeout: 30000,
-      socketTimeout: 60000,
-    });
+      // 25 va 587 portlar uchun STARTTLS talab qilinadi
+      requireTLS: port === 587 || port === 25,
+      ignoreTLS: false,
+      logger: false, // Production uchun o'chirildi
+      debug: false, // Production uchun o'chirildi
+      connectionTimeout: 60000, // 1 daqiqa
+      greetingTimeout: 30000, // 30 soniya
+      socketTimeout: 60000, // 1 daqiqa
+    } as any);
   }
 
-  async sendEmail(data: any) {
+  async sendEmail(data: { name: string; phone: string; email?: string; country?: string; company?: string; message: string }) {
     const s = (val?: string) => val?.trim() || '—';
 
     const mailOptions = {
@@ -51,12 +55,17 @@ export class ContactService {
       `,
     };
 
+    // Har safar yangi transporter yaratamiz (connection pool muammosini oldini olish uchun)
+    const transporter = this.createTransporter();
+    
     try {
-      const info = await this.transporter.sendMail(mailOptions);
+      const info = await transporter.sendMail(mailOptions);
       console.log('Email yuborildi:', info.messageId);
+      transporter.close(); // Connection'ni yopamiz
       return info;
     } catch (error) {
       console.error('Email yuborishda xato:', error);
+      transporter.close(); // Xato bo'lsa ham connection'ni yopamiz
       throw error;
     }
   }
