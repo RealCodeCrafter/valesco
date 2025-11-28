@@ -1,6 +1,8 @@
 // contact.service.ts
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { existsSync, mkdirSync, appendFileSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class ContactService {
@@ -88,5 +90,51 @@ export class ContactService {
     // Agar ikkala urilish ham muvaffaqiyatsiz bo'lsa
     console.error('Email yuborishda xato (barcha urilishlar muvaffaqiyatsiz):', lastError);
     throw lastError;
+  }
+
+  // Async email yuborish - background'da ishlaydi
+  async sendEmailAsync(data: { name: string; phone: string; email?: string; country?: string; company?: string; message: string }) {
+    const timestamp = new Date().toISOString();
+    const logData = {
+      timestamp,
+      name: data.name,
+      phone: data.phone,
+      email: data.email || '—',
+      country: data.country || '—',
+      company: data.company || '—',
+    };
+
+    try {
+      this.logEmail('START', logData, 'Email yuborish boshlandi');
+      
+      const info = await this.sendEmail(data);
+      
+      this.logEmail('SUCCESS', logData, `Email muvaffaqiyatli yuborildi: ${info.messageId}`);
+      console.log(`✅ [${timestamp}] Email yuborildi: ${data.name} (${data.phone}) -> ${info.messageId}`);
+      
+      return info;
+    } catch (error) {
+      this.logEmail('ERROR', logData, `Xato: ${error.message}`);
+      console.error(`❌ [${timestamp}] Email yuborishda xato: ${data.name} (${data.phone}) -> ${error.message}`);
+      throw error;
+    }
+  }
+
+  // Log faylga yozish
+  private logEmail(status: 'START' | 'SUCCESS' | 'ERROR', data: any, message: string) {
+    try {
+      const logsDir = join(__dirname, '..', '..', 'logs');
+      if (!existsSync(logsDir)) {
+        mkdirSync(logsDir, { recursive: true });
+      }
+
+      const logFile = join(logsDir, `contact-${new Date().toISOString().split('T')[0]}.log`);
+      const logMessage = `[${data.timestamp}] [${status}] ${data.name} | ${data.phone} | ${data.email} | ${message}\n`;
+      
+      appendFileSync(logFile, logMessage, 'utf8');
+    } catch (logError) {
+      // Log yozishda xato bo'lsa, faqat console'ga yozamiz
+      console.error('Log yozishda xato:', logError);
+    }
   }
 }
