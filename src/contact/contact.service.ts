@@ -23,11 +23,15 @@ export class ContactService {
       // 25 va 587 portlar uchun STARTTLS talab qilinadi
       requireTLS: port === 587 || port === 25,
       ignoreTLS: false,
-      logger: false, // Production uchun o'chirildi
-      debug: false, // Production uchun o'chirildi
-      connectionTimeout: 60000, // 1 daqiqa
-      greetingTimeout: 30000, // 30 soniya
-      socketTimeout: 60000, // 1 daqiqa
+      logger: process.env.NODE_ENV === 'development', // Development'da yoqiladi
+      debug: process.env.NODE_ENV === 'development', // Development'da yoqiladi
+      connectionTimeout: 120000, // 2 daqiqa (production uchun oshirildi)
+      greetingTimeout: 60000, // 1 daqiqa (production uchun oshirildi)
+      socketTimeout: 120000, // 2 daqiqa (production uchun oshirildi)
+      // Qo'shimcha sozlamalar
+      pool: false,
+      maxConnections: 1,
+      maxMessages: 1,
     } as any);
   }
 
@@ -38,7 +42,7 @@ export class ContactService {
       from: `"Valesco Contact" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_EMAIL,
       replyTo: data.email || undefined,
-      subject: 'Valesco – Yangi xabar!',
+      subject: 'Valescooil – Yangi xabar!',
       html: `
         <h2>Yangi kontakt soʻrovi keldi</h2>
         <p><strong>Ism:</strong> ${s(data.name)}</p>
@@ -55,18 +59,34 @@ export class ContactService {
       `,
     };
 
-    // Har safar yangi transporter yaratamiz (connection pool muammosini oldini olish uchun)
-    const transporter = this.createTransporter();
-    
-    try {
-      const info = await transporter.sendMail(mailOptions);
-      console.log('Email yuborildi:', info.messageId);
-      transporter.close(); // Connection'ni yopamiz
-      return info;
-    } catch (error) {
-      console.error('Email yuborishda xato:', error);
-      transporter.close(); // Xato bo'lsa ham connection'ni yopamiz
-      throw error;
+    // Retry mexanizmi - birinchi marta xato bo'lsa, qayta sinab ko'ramiz
+    let lastError;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      // Har safar yangi transporter yaratamiz
+      const transporter = this.createTransporter();
+      
+      try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email yuborildi:', info.messageId);
+        transporter.close(); // Connection'ni yopamiz
+        return info;
+      } catch (error) {
+        lastError = error;
+        try {
+          transporter.close(); // Xato bo'lsa ham connection'ni yopamiz
+        } catch (closeError) {
+          // Ignore close error
+        }
+        
+        if (attempt < 2) {
+          console.log(`Email yuborishda xato (urilish ${attempt}/2), qayta sinab ko'rilmoqda...`);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 2 soniya kutamiz
+        }
+      }
     }
+    
+    // Agar ikkala urilish ham muvaffaqiyatsiz bo'lsa
+    console.error('Email yuborishda xato (barcha urilishlar muvaffaqiyatsiz):', lastError);
+    throw lastError;
   }
 }
