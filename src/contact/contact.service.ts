@@ -74,6 +74,11 @@ export class ContactService {
         return info;
       } catch (error) {
         lastError = error;
+        const errorMessage = error?.message || 'Noma\'lum xato';
+        const errorCode = error?.code || 'UNKNOWN';
+        
+        console.log(`⚠️ Email yuborishda xato (urilish ${attempt}/2): ${errorMessage} (${errorCode})`);
+        
         try {
           transporter.close(); // Xato bo'lsa ham connection'ni yopamiz
         } catch (closeError) {
@@ -81,14 +86,16 @@ export class ContactService {
         }
         
         if (attempt < 2) {
-          console.log(`Email yuborishda xato (urilish ${attempt}/2), qayta sinab ko'rilmoqda...`);
-          await new Promise(resolve => setTimeout(resolve, 2000)); // 2 soniya kutamiz
+          console.log(`   Qayta sinab ko'rilmoqda...`);
+          await new Promise(resolve => setTimeout(resolve, 3000)); // 3 soniya kutamiz
         }
       }
     }
     
     // Agar ikkala urilish ham muvaffaqiyatsiz bo'lsa
-    console.error('Email yuborishda xato (barcha urilishlar muvaffaqiyatsiz):', lastError);
+    const errorMessage = lastError?.message || 'Noma\'lum xato';
+    const errorCode = lastError?.code || 'UNKNOWN';
+    console.error(`❌ Email yuborishda xato (barcha urilishlar muvaffaqiyatsiz): ${errorMessage} (${errorCode})`);
     throw lastError;
   }
 
@@ -114,9 +121,18 @@ export class ContactService {
       
       return info;
     } catch (error) {
-      this.logEmail('ERROR', logData, `Xato: ${error.message}`);
-      console.error(`❌ [${timestamp}] Email yuborishda xato: ${data.name} (${data.phone}) -> ${error.message}`);
-      throw error;
+      const errorMessage = error?.message || 'Noma\'lum xato';
+      const errorCode = error?.code || 'UNKNOWN';
+      const errorStack = error?.stack ? error.stack.substring(0, 500) : 'Stack trace yo\'q';
+      
+      this.logEmail('ERROR', logData, `Xato: ${errorMessage} (Code: ${errorCode})`);
+      console.error(`❌ [${timestamp}] Email yuborishda xato: ${data.name} (${data.phone})`);
+      console.error(`   Xato: ${errorMessage}`);
+      console.error(`   Code: ${errorCode}`);
+      console.error(`   Stack: ${errorStack}`);
+      
+      // Xatoni throw qilmaymiz, chunki async'da foydalanuvchi kutmayapti
+      // Faqat log qilamiz
     }
   }
 
