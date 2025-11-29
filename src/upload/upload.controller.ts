@@ -14,7 +14,6 @@ import { existsSync, mkdirSync } from 'fs';
 @Controller('upload')
 export class UploadController {
   constructor(private readonly configService: ConfigService) {
-    // uploads/files papkasini yaratish
     const uploadsDir = join(__dirname, '..', '..', 'uploads', 'files');
     if (!existsSync(uploadsDir)) {
       mkdirSync(uploadsDir, { recursive: true });
@@ -38,7 +37,7 @@ export class UploadController {
         },
       }),
       limits: {
-        fileSize: 200 * 1024 * 1024, // 200MB limit
+        fileSize: 200 * 1024 * 1024,
       },
     }),
   )

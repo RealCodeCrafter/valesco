@@ -8,9 +8,7 @@ export class ContactController {
 
   @Post()
   async submit(@Body() createContactDto: CreateContactDto) {
-    // Darhol response qaytaramiz, email background'da yuboriladi
     this.contactService.sendEmailAsync(createContactDto).catch((error) => {
-      // Error log qilamiz, lekin foydalanuvchiga xabar bermaymiz
       console.error('Background email yuborishda xato:', error);
     });
 

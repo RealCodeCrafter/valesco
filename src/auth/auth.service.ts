@@ -22,7 +22,7 @@ export class AuthService {
     const qb = this.adminRepository
       .createQueryBuilder('admin')
       .where('admin.username = :username', { username })
-      .addSelect('admin.password'); // password ni olib kelish
+      .addSelect('admin.password');
 
     return qb.getOne();
   }
@@ -58,13 +58,12 @@ export class AuthService {
     const payload = {
       id: user.id,
       username: user.username,
-      role: 'admin', // Faqat bitta roli: admin
-      sites: user.sites, // Ruxsat berilgan saytlar ro‘yxatini qo‘shish
+      role: 'admin',
+      sites: user.sites,
     };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
-      // expiresIn qo‘ymaymiz — muddatsiz bo‘lishi uchun
     });
 
     const { password: _omit, ...safeUser } = user;
