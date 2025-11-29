@@ -8,7 +8,7 @@ export class ContactService {
   private createTransporter() {
     const port = Number(process.env.SMTP_PORT) || 25;
     const useSecure = process.env.SMTP_SECURE === 'true' || port === 465;
-    const host = process.env.SMTP_HOST || 'mx1.trtparts.com';
+    const host = process.env.SMTP_HOST_IP || process.env.SMTP_HOST || '192.168.12.235';
 
     console.log(`📧 SMTP sozlamalari: ${host}:${port}, secure: ${useSecure}`);
 
@@ -22,9 +22,10 @@ export class ContactService {
       },
       tls: {
         rejectUnauthorized: false,
-        minVersion: 'TLSv1.2',
+        minVersion: 'TLSv1',
+        maxVersion: 'TLSv1.3',
       },
-      requireTLS: port === 587 || port === 25,
+      requireTLS: true,
       ignoreTLS: false,
       logger: process.env.NODE_ENV === 'development',
       debug: process.env.NODE_ENV === 'development',
