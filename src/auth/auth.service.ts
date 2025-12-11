@@ -59,18 +59,17 @@ export class AuthService {
       id: user.id,
       username: user.username,
       role: user.role || 'admin',
-      sites: user.sites,
     };
 
     const accessToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET,
     });
 
-    const { password: _omit, ...safeUser } = user;
+    const { password: _omit, sites: _omitSites, ...safeUser } = user;
 
     return {
       accessToken,
-      user: { ...safeUser, role: payload.role, sites: payload.sites },
+      user: { ...safeUser, role: payload.role },
     };
   }
 
