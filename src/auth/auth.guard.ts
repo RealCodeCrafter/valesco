@@ -47,8 +47,12 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    if (!user || user.role !== 'admin') {
-      throw new UnauthorizedException('Faqat adminlar uchun ruxsat berilgan');
+    if (!user) {
+      throw new UnauthorizedException('Foydalanuvchi topilmadi');
+    }
+
+    if (!requiredRoles.includes(user.role)) {
+      throw new UnauthorizedException('Ruxsat yo\'q');
     }
 
     return true;

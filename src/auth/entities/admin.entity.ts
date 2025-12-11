@@ -13,4 +13,7 @@ export class Admin {
 
   @Column("simple-array")
   sites: string[];
+
+  @Column({ default: 'admin' })
+  role: string;
 }

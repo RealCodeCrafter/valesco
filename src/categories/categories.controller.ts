@@ -64,6 +64,8 @@ export class CategoriesController {
 
   
   @Put(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
   @UseInterceptors(
     FileInterceptor('img', {
       storage: diskStorage({
@@ -91,6 +93,8 @@ export class CategoriesController {
 
   
   @Delete(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
   async remove(@Param('id') id: string) {
     return this.categoriesService.remove(+id);
   }

@@ -20,7 +20,7 @@ export class AuthController {
 
   @Post('logout')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles('super_admin', 'admin')
   async logout(@Req() req, @Res() res: Response) {
     const { id } = req.user;
     const result = await this.authService.logout(id);

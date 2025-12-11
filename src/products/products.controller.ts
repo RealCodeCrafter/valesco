@@ -33,6 +33,8 @@ export class ProductsController {
   ) {}
 
   @Post()
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
       storage: diskStorage({
@@ -89,6 +91,8 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
   @UseInterceptors(
     FileFieldsInterceptor([{ name: 'image', maxCount: 50 }], {
       storage: diskStorage({
@@ -130,7 +134,9 @@ export class ProductsController {
   }
 
   @Delete(':id')
-async remove(@Param('id') id: string): Promise<void> {
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
+  async remove(@Param('id') id: string): Promise<void> {
   const parsedId = parseInt(id, 10);
   if (isNaN(parsedId) || parsedId <= 0) {
     throw new BadRequestException('Invalid product ID: ID must be a positive number');
@@ -138,7 +144,9 @@ async remove(@Param('id') id: string): Promise<void> {
   return this.productsService.remove(parsedId);
 }
 
-@Delete(':id/file')
+  @Delete(':id/file')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('super_admin', 'admin')
 @UseInterceptors(FileFieldsInterceptor([]))
 async removeFile(
   @Param('id', ParseIntPipe) id: number,
