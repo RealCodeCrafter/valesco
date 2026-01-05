@@ -34,6 +34,22 @@ export class CategoriesService {
       .getMany();
   }
 
+
+// async findOne(id: number): Promise<Category> {
+//   const category = await this.categoriesRepository.findOne({
+//     where: { id },
+//     relations: ['products'],
+//   });
+
+//   if (!category) {
+//     throw new NotFoundException('Category not found');
+//   }
+
+//   return category;
+// }
+
+
+
 async findOne(id: number): Promise<Category> {
   const category = await this.categoriesRepository.findOne({
     where: { id },
@@ -59,14 +75,11 @@ async findOne(id: number): Promise<Category> {
   category.products.sort((a, b) => {
     const indexA = customOrder.indexOf(a.title);
     const indexB = customOrder.indexOf(b.title);
-    // agar nom customOrderda bo‘lmasa oxiriga qo‘yadi
     return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
   });
 
   return category;
 }
-
-
 
 async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string): Promise<Category> {
     return await this.categoriesRepository.manager.transaction(async (transactionalEntityManager) => {
