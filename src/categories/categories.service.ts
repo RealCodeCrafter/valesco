@@ -34,7 +34,6 @@ export class CategoriesService {
       .getMany();
   }
 
-
 async findOne(id: number): Promise<Category> {
   const category = await this.categoriesRepository.findOne({
     where: { id },
@@ -45,8 +44,28 @@ async findOne(id: number): Promise<Category> {
     throw new NotFoundException('Category not found');
   }
 
+  // DBdagi product nomlari bilan mos tartib
+  const customOrder = [
+    'VALESCO GENUINE',
+    'VALESCO PRO-LONG',
+    'VALESCO RED',
+    'VALESCO BLUE',
+    'VALESCO GREEN',
+    'VALESCO YELLOW',
+    'VALESCO TOSOL',
+  ];
+
+  // Maxsus tartibga ko‘ra sort qilish
+  category.products.sort((a, b) => {
+    const indexA = customOrder.indexOf(a.title);
+    const indexB = customOrder.indexOf(b.title);
+    // agar nom customOrderda bo‘lmasa oxiriga qo‘yadi
+    return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+  });
+
   return category;
 }
+
 
 
 async update(id: number, updateCategoryDto: UpdateCategoryDto, imgPath?: string): Promise<Category> {
