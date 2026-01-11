@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AdminController } from './admin.controller';
@@ -14,7 +14,7 @@ dotenv.config();
     TypeOrmModule.forFeature([Admin]),
     JwtModule.register({
       global: true,
-      secret: process.env.JWT_SECRET || 'SecretKey123!@#VeryLongAndRandom',
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
   ],
@@ -22,10 +22,4 @@ dotenv.config();
   providers: [AuthService],
   exports: [AuthService],
 })
-export class AuthModule implements OnModuleInit {
-  constructor(private readonly authService: AuthService) {}
-
-  async onModuleInit() {
-    await this.authService.createSuperAdmin();
-  }
-}
+export class AuthModule {}

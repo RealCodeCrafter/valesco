@@ -23,7 +23,7 @@ import { UploadModule } from './upload/upload.module';
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: false,
         autoLoadEntities: true,
         ssl: config.get<string>('DB_SSL') === 'true'
           ? { rejectUnauthorized: false }

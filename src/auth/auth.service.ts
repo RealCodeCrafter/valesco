@@ -77,63 +77,6 @@ export class AuthService {
     return { message: `Admin ${userId} logged out successfully` };
   }
 
-  async createSuperAdmin() {
-    const superAdminUsername = process.env.SUPER_ADMIN_USERNAME || `superadmin_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-    const superAdminPassword = process.env.SUPER_ADMIN_PASSWORD || this.generateStrongPassword();
-
-    const existingSuperAdmin = await this.adminRepository.findOne({
-      where: { role: 'super_admin' },
-    });
-
-    if (existingSuperAdmin) {
-      console.log('Super admin allaqachon mavjud:', existingSuperAdmin.username);
-      return {
-        username: existingSuperAdmin.username,
-        password: 'Mavjud super admin parolini ishlating',
-        message: 'Super admin allaqachon mavjud',
-      };
-    }
-
-    const hashedPassword = await bcrypt.hash(superAdminPassword, 10);
-
-    const superAdmin = this.adminRepository.create({
-      username: superAdminUsername,
-      password: hashedPassword,
-      role: 'super_admin',
-      sites: ['*'],
-    });
-
-    await this.adminRepository.save(superAdmin);
-
-    console.log('\n========================================');
-    console.log('SUPER ADMIN YARATILDI:');
-    console.log('========================================');
-    console.log('Username:', superAdminUsername);
-    console.log('Password:', superAdminPassword);
-    console.log('Role: super_admin');
-    console.log('========================================\n');
-
-    return {
-      username: superAdminUsername,
-      password: superAdminPassword,
-      message: 'Super admin muvaffaqiyatli yaratildi',
-    };
-  }
-
-  private generateStrongPassword(): string {
-    const length = 20;
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
-    let password = '';
-    const crypto = require('crypto');
-    const randomBytes = crypto.randomBytes(length);
-    
-    for (let i = 0; i < length; i++) {
-      password += charset[randomBytes[i] % charset.length];
-    }
-    
-    return password;
-  }
-
   async createAdmin(username: string, password: string, sites: string[], currentUser: any) {
     if (currentUser.role !== 'super_admin') {
       throw new UnauthorizedException('Faqat super admin admin yarata oladi');
