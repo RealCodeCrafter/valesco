@@ -5,16 +5,16 @@ export class News {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   title: string;
 
   @Column({ type: 'text', nullable: true })
   description: string | null;
 
-  @Column()
+  @Column({ type: 'varchar' })
   date: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   img: string | null;
 
   @Column('jsonb', { nullable: true, default: () => "'[]'::jsonb" })
@@ -23,6 +23,6 @@ export class News {
   @Column({ type: 'text', nullable: true })
   fullContent: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   video: string | null;
 }
