@@ -10,8 +10,9 @@ export class CreateNewsDto {
   @IsString()
   description?: string;
 
+  @IsOptional()
   @IsString()
-  date: string;
+  date?: string;
 
   @IsOptional()
   @IsString()

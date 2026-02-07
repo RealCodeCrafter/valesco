@@ -21,7 +21,16 @@ export class NewsService {
     const news = new News();
     news.title = createNewsDto.title;
     news.description = createNewsDto.description || '';
-    news.date = createNewsDto.date;
+    if (createNewsDto.date) {
+      news.date = createNewsDto.date;
+    } else {
+      const now = new Date();
+      const months = [
+        'Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+        'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'
+      ];
+      news.date = `${now.getDate()} ${months[now.getMonth()]}, ${now.getFullYear()}`;
+    }
     news.img = uploadedFiles?.img || createNewsDto.img || null;
     news.image = uploadedFiles?.images || createNewsDto.image || [];
     news.fullContent = createNewsDto.fullContent || '';
