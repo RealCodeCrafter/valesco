@@ -52,20 +52,20 @@ export class ContactService {
       from: `"Valesco Contact" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_EMAIL,
       replyTo: data.email || undefined,
-      subject: 'Valescooil – Yangi xabar!',
+      subject: 'Valescooil – Новое сообщение',
       html: `
-        <h2>Yangi kontakt soʻrovi keldi</h2>
-        <p><strong>Ism:</strong> ${s(data.name)}</p>
-        <p><strong>Telefon:</strong> ${s(data.phone)}</p>
+        <h2>Новая заявка с контактной формы</h2>
+        <p><strong>Имя:</strong> ${s(data.name)}</p>
+        <p><strong>Телефон:</strong> ${s(data.phone)}</p>
         <p><strong>Email:</strong> ${s(data.email)}</p>
-        <p><strong>Davlat:</strong> ${s(data.country)}</p>
-        <p><strong>Kompaniya:</strong> ${s(data.company)}</p>
-        <p><strong>Xabar:</strong></p>
+        <p><strong>Страна:</strong> ${s(data.country)}</p>
+        <p><strong>Компания:</strong> ${s(data.company)}</p>
+        <p><strong>Сообщение:</strong></p>
         <div style="background:#f5f5f5;padding:15px;border-left:4px solid #0066ff;">
           ${s(data.message)}
         </div>
         <hr>
-        <small><strong>Vaqt:</strong> ${new Date().toLocaleString('uz-UZ')}</small>
+        <small><strong>Время отправки:</strong> ${new Date().toLocaleString('ru-RU')}</small>
       `,
     };
 
