@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ContactModule } from "./contact/contact.module";
 import { UploadModule } from './upload/upload.module';
 import { NewsModule } from './news/news.module';
+import { ArticlesModule } from './articles/articles.module';
+import { SitemapModule } from './sitemap/sitemap.module';
 
 @Module({
   imports: [
@@ -37,6 +39,8 @@ import { NewsModule } from './news/news.module';
     ContactModule,
     UploadModule,
     NewsModule,
+    ArticlesModule,
+    SitemapModule,
   ],
 })
 export class AppModule {}
