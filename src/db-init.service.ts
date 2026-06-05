@@ -24,11 +24,21 @@ export class DbInitService implements OnModuleInit {
         return;
       }
 
-      const sql = fs.readFileSync(filePath, 'utf8');
+      const rawSql = fs.readFileSync(filePath, 'utf8');
+
+      // 1) SQL kommentariyalarni olib tashlaymiz (faqat "--" single-line).
+      // 2) Keyin ";" bo'yicha statementlarga ajratamiz.
+      // Aks holda, comment bilan boshlangan statementlar butunlay tashlab yuborilib,
+      // CREATE TABLE umuman bajarilmay qolishi mumkin.
+      const sql = rawSql
+        .split(/\r?\n/g)
+        .filter((line) => !line.trim().startsWith('--'))
+        .join('\n');
+
       const statements = sql
         .split(';')
         .map((s) => s.trim())
-        .filter((s) => s.length > 0 && !s.startsWith('--'));
+        .filter((s) => s.length > 0);
 
       for (const stmt of statements) {
         await this.dataSource.query(stmt);
@@ -36,7 +46,8 @@ export class DbInitService implements OnModuleInit {
 
       this.logger.log(`SQL fayl bajarildi: ${fileName}`);
     } catch (error) {
-      this.logger.error(`SQL faylni bajarishda xatolik: ${fileName}`, error);
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`SQL faylni bajarishda xatolik: ${fileName}. ${message}`);
     }
   }
 }
