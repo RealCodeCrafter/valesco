@@ -9,6 +9,7 @@ import { UploadModule } from './upload/upload.module';
 import { NewsModule } from './news/news.module';
 import { ArticlesModule } from './articles/articles.module';
 import { SitemapModule } from './sitemap/sitemap.module';
+import { DbInitService } from './db-init.service';
 
 @Module({
   imports: [
@@ -42,5 +43,6 @@ import { SitemapModule } from './sitemap/sitemap.module';
     ArticlesModule,
     SitemapModule,
   ],
+  providers: [DbInitService],
 })
 export class AppModule {}
