@@ -200,10 +200,14 @@ function escapeSql(value) {
   return value.replace(/'/g, "''");
 }
 
+function dollarQuote(value, tag = 'article_html') {
+  return `$${tag}$${value}$${tag}$`;
+}
+
 const inserts = articles
   .map(
     (a) => `INSERT INTO "articles" ("title", "slug", "language", "description", "content", "metaTitle", "metaDescription", "published")
-SELECT '${escapeSql(a.title)}', '${escapeSql(a.slug)}', '${escapeSql(a.language)}', '${escapeSql(a.description)}', '${escapeSql(a.content)}', '${escapeSql(a.metaTitle)}', '${escapeSql(a.metaDescription)}', true
+SELECT '${escapeSql(a.title)}', '${escapeSql(a.slug)}', '${escapeSql(a.language)}', '${escapeSql(a.description)}', ${dollarQuote(a.content)}, '${escapeSql(a.metaTitle)}', '${escapeSql(a.metaDescription)}', true
 WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = '${escapeSql(a.slug)}' AND "language" = '${escapeSql(a.language)}');`,
   )
   .join('\n\n');

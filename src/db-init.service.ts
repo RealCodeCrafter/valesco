@@ -16,6 +16,62 @@ export class DbInitService implements OnModuleInit {
     await this.runSqlFile('seed_articles_en.sql');
   }
 
+  private splitSqlStatements(sql: string): string[] {
+    const statements: string[] = [];
+    let current = '';
+    let inSingleQuote = false;
+    let dollarTag: string | null = null;
+
+    for (let i = 0; i < sql.length; i++) {
+      const char = sql[i];
+
+      if (!inSingleQuote && char === '$') {
+        const rest = sql.slice(i);
+        const match = rest.match(/^\$([a-zA-Z_][a-zA-Z0-9_]*)?\$/);
+        if (match) {
+          const tag = match[1] ?? '';
+          if (dollarTag === null) {
+            dollarTag = tag;
+          } else if (dollarTag === tag) {
+            dollarTag = null;
+          }
+          current += match[0];
+          i += match[0].length - 1;
+          continue;
+        }
+      }
+
+      if (dollarTag !== null) {
+        current += char;
+        continue;
+      }
+
+      if (char === "'") {
+        if (inSingleQuote && sql[i + 1] === "'") {
+          current += "''";
+          i++;
+          continue;
+        }
+        inSingleQuote = !inSingleQuote;
+        current += char;
+        continue;
+      }
+
+      if (char === ';' && !inSingleQuote && dollarTag === null) {
+        const trimmed = current.trim();
+        if (trimmed) statements.push(trimmed);
+        current = '';
+        continue;
+      }
+
+      current += char;
+    }
+
+    const trimmed = current.trim();
+    if (trimmed) statements.push(trimmed);
+    return statements;
+  }
+
   private async runSqlFile(fileName: string) {
     try {
       const filePath = path.join(process.cwd(), fileName);
@@ -27,19 +83,12 @@ export class DbInitService implements OnModuleInit {
 
       const rawSql = fs.readFileSync(filePath, 'utf8');
 
-      // 1) SQL kommentariyalarni olib tashlaymiz (faqat "--" single-line).
-      // 2) Keyin ";" bo'yicha statementlarga ajratamiz.
-      // Aks holda, comment bilan boshlangan statementlar butunlay tashlab yuborilib,
-      // CREATE TABLE umuman bajarilmay qolishi mumkin.
       const sql = rawSql
         .split(/\r?\n/g)
         .filter((line) => !line.trim().startsWith('--'))
         .join('\n');
 
-      const statements = sql
-        .split(';')
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
+      const statements = this.splitSqlStatements(sql);
 
       for (const stmt of statements) {
         await this.dataSource.query(stmt);
@@ -52,4 +101,3 @@ export class DbInitService implements OnModuleInit {
     }
   }
 }
-

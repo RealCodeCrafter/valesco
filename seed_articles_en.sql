@@ -1,8 +1,8 @@
 -- 3 ta ingliz tilidagi SEO maqolani bazaga kiritish
 
 INSERT INTO "articles" ("title", "slug", "language", "description", "content", "metaTitle", "metaDescription", "published")
-SELECT 'The Magic of Motion: 5 Hidden Heroes Saving Your Car Every Day', 'magic-of-motion-5-hidden-heroes', 'en', 'We break down 5 technical fluids without which your car cannot work: motor oil, transmission fluid, antifreeze, brake fluid, and hydraulic oil. Tips from Valesco Oil.', '<p>When we think of car power, horsepower, engine displacement, and torque immediately come to mind. But have you ever wondered if all this iron might would turn into a heap of immobile junk without five unnoticeable yet vital fluids?</p>
-<p>Choosing the right motor oil, antifreeze, and transmission fluids is not just about car maintenance; it is a guarantee of your safety and savings on repairs. Let''s break down how these "hidden heroes" work and why Valesco Oil products are becoming the number one choice for car owners.</p>
+SELECT 'The Magic of Motion: 5 Hidden Heroes Saving Your Car Every Day', 'magic-of-motion-5-hidden-heroes', 'en', 'We break down 5 technical fluids without which your car cannot work: motor oil, transmission fluid, antifreeze, brake fluid, and hydraulic oil. Tips from Valesco Oil.', $article_html$<p>When we think of car power, horsepower, engine displacement, and torque immediately come to mind. But have you ever wondered if all this iron might would turn into a heap of immobile junk without five unnoticeable yet vital fluids?</p>
+<p>Choosing the right motor oil, antifreeze, and transmission fluids is not just about car maintenance; it is a guarantee of your safety and savings on repairs. Let's break down how these "hidden heroes" work and why Valesco Oil products are becoming the number one choice for car owners.</p>
 
 <h2>1. Motor Oil: The Heart and Blood of Your Engine</h2>
 <p>A car engine makes thousands of revolutions per minute. Without lubrication, the colossal friction would destroy the metal in a matter of seconds. Motor oil performs three essential functions:</p>
@@ -49,11 +49,11 @@ SELECT 'The Magic of Motion: 5 Hidden Heroes Saving Your Car Every Day', 'magic-
 </tbody>
 </table>
 
-<p>Protect your car from the inside out. Choose reliability backed by technology. Go to the Valesco Oil catalog and select the ideal technical fluids for your vehicle today!</p>', 'The Magic of Motion: 5 Hidden Heroes Saving Your Car Every Day | Valesco Oil', 'Learn how motor oil, antifreeze, transmission, brake and hydraulic fluids protect your car every day. Recommendations from Valesco Oil.', true
+<p>Protect your car from the inside out. Choose reliability backed by technology. Go to the Valesco Oil catalog and select the ideal technical fluids for your vehicle today!</p>$article_html$, 'The Magic of Motion: 5 Hidden Heroes Saving Your Car Every Day | Valesco Oil', 'Learn how motor oil, antifreeze, transmission, brake and hydraulic fluids protect your car every day. Recommendations from Valesco Oil.', true
 WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = 'magic-of-motion-5-hidden-heroes' AND "language" = 'en');
 
 INSERT INTO "articles" ("title", "slug", "language", "description", "content", "metaTitle", "metaDescription", "published")
-SELECT 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference and Which Oil Does Your Car Exactly Need', 'mineral-semi-synthetic-or-synthetic-which-oil', 'en', 'We break down the difference between mineral, semi-synthetic and synthetic motor oil. Which oil suits your car — expert advice from Valesco Oil.', '<p>Every car owner faces a major choice when buying motor oil: mineral, semi-synthetic, or synthetic (Full Synthetic). The price range between them can be huge, and the debates on forums about which oil is better have been ongoing for years.</p>
+SELECT 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference and Which Oil Does Your Car Exactly Need', 'mineral-semi-synthetic-or-synthetic-which-oil', 'en', 'We break down the difference between mineral, semi-synthetic and synthetic motor oil. Which oil suits your car — expert advice from Valesco Oil.', $article_html$<p>Every car owner faces a major choice when buying motor oil: mineral, semi-synthetic, or synthetic (Full Synthetic). The price range between them can be huge, and the debates on forums about which oil is better have been ongoing for years.</p>
 <p>What is the real difference between these three types of oils? Why is synthetic oil more expensive? And most importantly — which oil will ideally suit your car? The experts at Valesco Oil break down this question in detail, without complex chemical formulas but with maximum utility.</p>
 
 <h2>The Main Difference Lies in the "Foundation" (Base Oil)</h2>
@@ -86,7 +86,7 @@ SELECT 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference and Which 
 
 <h3>Who is SEMI-SYNTHETIC oil for?</h3>
 <p><strong>Vehicles:</strong> Foreign and domestic cars from the late 90s and 2000s, as well as any vehicles with a solid mileage (over 150,000 – 200,000 km).</p>
-<p><strong>Why exactly this?</strong> When an engine has natural wear, pure synthetics can begin to burn off (consume as oil burn) or ooze through worn-out gaskets. Semi-synthetics (for example, the popular 10W-40 class), due to their density, stabilize the operation of such an engine and save the owner''s budget.</p>
+<p><strong>Why exactly this?</strong> When an engine has natural wear, pure synthetics can begin to burn off (consume as oil burn) or ooze through worn-out gaskets. Semi-synthetics (for example, the popular 10W-40 class), due to their density, stabilize the operation of such an engine and save the owner's budget.</p>
 
 <h3>Who is SYNTHETIC oil for?</h3>
 <p><strong>Vehicles:</strong> All modern cars (roughly from the second half of the 2000s to the present day), cars from dealerships, turbocharged engines, multi-valve engines, and direct fuel injection systems.</p>
@@ -108,18 +108,18 @@ SELECT 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference and Which 
 <h2>A Quality Base is the Key to Engine Longevity</h2>
 <p>Regardless of what kind of car you have — a brand new crossover from a dealership or a time-tested, reliable sedan with high mileage — its heart needs high-quality lubrication.</p>
 <p>The Valesco Oil brand offers a balanced line of motor oils. In our catalog, you will find high-tech 100% synthetics for demanding modern engines, as well as stable semi-synthetics that will provide a second youth to your high-mileage vehicle.</p>
-<p>Choose the right type of oil, follow the manufacturer''s recommendations, and order original products at Valesco Oil!</p>', 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference | Valesco Oil', 'Mineral, semi-synthetic or synthetic oil — which should you choose for your car? A detailed comparison from Valesco Oil experts.', true
+<p>Choose the right type of oil, follow the manufacturer's recommendations, and order original products at Valesco Oil!</p>$article_html$, 'Mineral, Semi-Synthetic, or Synthetic? What is the Difference | Valesco Oil', 'Mineral, semi-synthetic or synthetic oil — which should you choose for your car? A detailed comparison from Valesco Oil experts.', true
 WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = 'mineral-semi-synthetic-or-synthetic-which-oil' AND "language" = 'en');
 
 INSERT INTO "articles" ("title", "slug", "language", "description", "content", "metaTitle", "metaDescription", "published")
-SELECT 'What Do the Numbers on the Canister Mean? A Complete Guide to Motor Oil Viscosity: 5W-30, 10W-40, 15W-40', 'what-do-numbers-on-canister-mean-oil-viscosity-guide', 'en', 'Complete guide to motor oil viscosity SAE: what 5W-30, 10W-40, 15W-40 mean. How to decode numbers on the canister and choose the right oil — Valesco Oil.', '<p>When visiting an auto parts store or choosing oil on a website, every car owner sees mysterious combinations on the canisters: 5W-30, 10W-40, 15W-40. For many, it is just a set of numbers, but this very code encrypts the main parameter of your engine''s health — viscosity.</p>
+SELECT 'What Do the Numbers on the Canister Mean? A Complete Guide to Motor Oil Viscosity: 5W-30, 10W-40, 15W-40', 'what-do-numbers-on-canister-mean-oil-viscosity-guide', 'en', 'Complete guide to motor oil viscosity SAE: what 5W-30, 10W-40, 15W-40 mean. How to decode numbers on the canister and choose the right oil — Valesco Oil.', $article_html$<p>When visiting an auto parts store or choosing oil on a website, every car owner sees mysterious combinations on the canisters: 5W-30, 10W-40, 15W-40. For many, it is just a set of numbers, but this very code encrypts the main parameter of your engine's health — viscosity.</p>
 <p>What do these letters and numbers mean? How do you decode the SAE classification? And what happens if you pour in the "wrong" oil? The experts at Valesco Oil have prepared a detailed and easy-to-understand guide that will settle this question once and for all.</p>
 
 <h2>What is the SAE Classification?</h2>
-<p>The letters SAE on a canister mean that the oil''s viscosity was measured according to the standard of the Society of Automotive Engineers (USA). This is an international standard that divides oils into winter, summer, and all-season types.</p>
+<p>The letters SAE on a canister mean that the oil's viscosity was measured according to the standard of the Society of Automotive Engineers (USA). This is an international standard that divides oils into winter, summer, and all-season types.</p>
 <p>Today, practically all civilian motor oils are all-season. This is precisely why their marking consists of two numbers with the letter "W" between them.</p>
 
-<h2>Let''s break down the popular 5W-30 oil into its components:</h2>
+<h2>Let's break down the popular 5W-30 oil into its components:</h2>
 
 <h3>1. The First Number and the Letter "W" (Winter Index)</h3>
 <p>The letter W stands for Winter. The number standing before it indicates the low-temperature properties of the oil. It shows how easily the engine will start in freezing weather and how quickly the pump will circulate the oil through the system to all moving parts.</p>
@@ -140,8 +140,8 @@ SELECT 'What Do the Numbers on the Canister Mean? A Complete Guide to Motor Oil 
 <li><strong>50 / 60</strong> — thick oils for sports cars or heavily worn engines.</li>
 </ul>
 
-<h2>Breakdown of Popular Classes: What''s the Difference?</h2>
-<p>Let''s compare the three most common viscosity classes that car owners search for most frequently:</p>
+<h2>Breakdown of Popular Classes: What's the Difference?</h2>
+<p>Let's compare the three most common viscosity classes that car owners search for most frequently:</p>
 <table>
 <thead>
 <tr><th>Viscosity Class</th><th>Base Type (Most Common)</th><th>Temperature Range</th><th>Who is it for?</th></tr>
@@ -160,7 +160,7 @@ SELECT 'What Do the Numbers on the Canister Mean? A Complete Guide to Motor Oil 
 <p><strong>Reality:</strong> Modern all-season oils (such as the lineup from Valesco Oil) operate stably all year round. You should only change viscosity if it is recommended by your vehicle manufacturer.</p>
 
 <h2>Which Viscosity to Choose for Your Car?</h2>
-<p>The golden rule for any car owner is to always look into the vehicle''s service manual. The engineers who created your engine have already calculated the ideal clearances and specified the required SAE index.</p>
+<p>The golden rule for any car owner is to always look into the vehicle's service manual. The engineers who created your engine have already calculated the ideal clearances and specified the required SAE index.</p>
 <p>If your vehicle requires stable protection during both a freezing winter startup and scorching summer heat, check out the range of lubricants from Valesco Oil. Our catalog features motor oils of all popular viscosity classes, created on the basis of premium base oils and modern additive packages.</p>
-<p><strong>Valesco Oil — ideal viscosity and maximum protection for your engine under any conditions!</strong></p>', 'What Do the Numbers on the Canister Mean? Complete Guide to Motor Oil Viscosity | Valesco Oil', 'What do 5W-30, 10W-40, 15W-40 on the canister mean? Complete SAE classification guide and motor oil viscosity tips from Valesco Oil.', true
+<p><strong>Valesco Oil — ideal viscosity and maximum protection for your engine under any conditions!</strong></p>$article_html$, 'What Do the Numbers on the Canister Mean? Complete Guide to Motor Oil Viscosity | Valesco Oil', 'What do 5W-30, 10W-40, 15W-40 on the canister mean? Complete SAE classification guide and motor oil viscosity tips from Valesco Oil.', true
 WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = 'what-do-numbers-on-canister-mean-oil-viscosity-guide' AND "language" = 'en');

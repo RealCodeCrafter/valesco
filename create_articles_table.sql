@@ -1,4 +1,4 @@
--- Articles jadvalini yaratish
+-- Articles jadvalini yaratish (faqat jadval; indexlar alter_articles_add_language.sql da)
 CREATE TABLE IF NOT EXISTS "articles" (
     "id" SERIAL PRIMARY KEY,
     "title" VARCHAR NOT NULL,
@@ -13,7 +13,3 @@ CREATE TABLE IF NOT EXISTS "articles" (
     "createdAt" TIMESTAMP DEFAULT NOW(),
     "updatedAt" TIMESTAMP DEFAULT NOW()
 );
-
-CREATE UNIQUE INDEX IF NOT EXISTS "idx_articles_slug_language" ON "articles" ("slug", "language");
-CREATE INDEX IF NOT EXISTS "idx_articles_published" ON "articles" ("published");
-CREATE INDEX IF NOT EXISTS "idx_articles_language" ON "articles" ("language");
