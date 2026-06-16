@@ -1,0 +1,185 @@
+.media {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 40px 12px;
+
+    @media (max-width:1580px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 40px 12px;
+    }
+
+    &-left {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        &-title {
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 58px;
+            width: 90%;
+
+            span {
+                color: red;
+            }
+        }
+
+        &-text {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+    }
+
+    &-right {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: flex-end;
+        grid-gap: 20px;
+
+        &-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: .6s;
+
+            &-logo {
+                position: absolute;
+                top: -35px;
+                left: 50%;
+                transform: translate(-50%, -15%);
+                width: 82px;
+                height: 82px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: .5s;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+                svg {
+                    font-size: 40px;
+                    color: #fff;
+                    transition: .4s;
+                    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+                }
+
+                &.instagram {
+                    background: radial-gradient(circle at 33% 100%,
+                            #fdf497 0%,
+                            #fdf497 15%,
+                            #fd5949 45%,
+                            #d6249f 60%,
+                            #9638f0 75%,
+                            #285AEB 100%);
+                    box-shadow:
+                        0 10px 25px rgba(0, 0, 0, 0.25),
+                        0 0 18px rgba(255, 255, 255, 0.4) inset;
+                }
+
+                &.facebook {
+                    background: linear-gradient(145deg, #1877f2, #3b5998);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+                }
+
+                &:hover {
+                    transform: translate(-50%, -15%) scale(1.15);
+                    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+
+                    svg {
+                        transform: scale(1.15);
+                    }
+                }
+            }
+
+            &-img img {
+                width: 100%;
+                height: 420px;
+                border-radius: 10px;
+            }
+
+            &-btns {
+                padding: 10px 30px;
+                border-radius: 22px;
+                border: 1px solid #aaa6;
+                background-color: #333331;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                transition: .6s;
+
+                &:hover {
+                    transform: scale(1.099);
+                }
+            }
+        }
+    }
+
+    @media (max-width:1200px) {
+        grid-template-columns: 300px 1fr;
+
+        &-right-card-img img {
+            height: 340px;
+        }
+    }
+
+    @media (max-width:1000px) {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        padding: 20px;
+
+        &-right-card-img img {
+            height: 340px;
+        }
+    }
+
+    @media (max-width:670px) {
+        &-right-card-img img {
+            height: 360px;
+            object-fit: contain;
+        }
+
+        &-right-card-logo {
+            width: 70px;
+            height: 70px;
+            top: -25px;
+
+            svg {
+                font-size: 30px;
+            }
+        }
+
+        &-left-title {
+            line-height: 40px;
+        }
+    }
+
+    @media (max-width:600px) {
+        &-right {
+            grid-template-columns: repeat(1, 1fr);
+            gap: 40px 15px;
+        }
+    }
+
+    @media (max-width:400px) {
+        &-right {
+            grid-template-columns: 1fr;
+            gap: 40px 10px;
+        }
+
+        &-left-title {
+            font-size: 30px;
+            line-height: 36px;
+            width: 100%;
+        }
+
+        &-left-text {
+            font-size: 18px;
+        }
+    }
+}

@@ -14,8 +14,11 @@ export class Article {
   @Column({ type: 'varchar' })
   title: string;
 
-  @Column({ type: 'varchar', unique: true })
+  @Column({ type: 'varchar' })
   slug: string;
+
+  @Column({ type: 'varchar', default: 'ru' })
+  language: string;
 
   @Column({ type: 'text', nullable: true })
   description: string | null;

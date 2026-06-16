@@ -1,0 +1,102 @@
+.specificat {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 20px;
+    padding-top: 60px;
+
+    &-title {
+        font-size: 26px;
+        font-weight: 500;
+        color: #333331;
+        line-height: 34px;
+        opacity: 0;
+        animation: fadeSlide 0.6s ease forwards;
+    }
+
+    &-item {
+        display: grid;
+        border: 1px solid #aaa4;
+        box-shadow: 1px 1px 10px #aaa3;
+        border-radius: 6px;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    &-list {
+        font-size: 18px;
+        font-weight: 400;
+        color: gray;
+        padding: 20px 20px;
+        opacity: 0;
+        transform: translateX(-20px);
+        animation: fadeSlide 0.6s ease forwards;
+
+        &:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        &:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        &:nth-child(4) {
+            animation-delay: 0.8s;
+        }
+
+        &:nth-child(5) {
+            animation-delay: 1s;
+        }
+
+        &:nth-child(6) {
+            animation-delay: 1.2s;
+        }
+
+        &:nth-child(7) {
+            animation-delay: 1.4s;
+        }
+
+        &:nth-child(8) {
+            animation-delay: 1.6s;
+        }
+
+        &:nth-child(9) {
+            animation-delay: 1.8s;
+        }
+    }
+
+    &-list:nth-child(odd) {
+        background: #fafafa;
+    }
+
+    &-list:hover {
+        background: #f0f6ff;
+        transition: 0.2s ease;
+    }
+
+    @media (max-width:650px) {
+        grid-template-columns: 1fr;
+    }
+
+    @media (max-width:500px) {
+        padding-top: 20px;
+
+        &-list {
+            font-size: 14px
+        }
+    }
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

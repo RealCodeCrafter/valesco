@@ -1,0 +1,174 @@
+{
+  "info": {
+    "_postman_id": "8f0f6d6c-2387-41d7-95cd-8a6baf5f2cb1",
+    "name": "Valesco Articles",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Articles",
+      "item": [
+        {
+          "name": "GET /api/articles?lang=ru",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles?lang=ru"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles?lang=en",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles?lang=en"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/magiya-dvizheniya-5-skrytyh-geroev?lang=ru",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/magiya-dvizheniya-5-skrytyh-geroev?lang=ru"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/mineralka-polusintetika-ili-sintetika-v-chem-raznica?lang=ru",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/mineralka-polusintetika-ili-sintetika-v-chem-raznica?lang=ru"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/chto-znachat-cifry-na-kanistre-polnyj-gid-po-vyazkosti?lang=ru",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/chto-znachat-cifry-na-kanistre-polnyj-gid-po-vyazkosti?lang=ru"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/magic-of-motion-5-hidden-heroes?lang=en",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/magic-of-motion-5-hidden-heroes?lang=en"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/mineral-semi-synthetic-or-synthetic-which-oil?lang=en",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/mineral-semi-synthetic-or-synthetic-which-oil?lang=en"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/articles/what-do-numbers-on-canister-mean-oil-viscosity-guide?lang=en",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/articles/what-do-numbers-on-canister-mean-oil-viscosity-guide?lang=en"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sitemap",
+      "item": [
+        {
+          "name": "GET /sitemap.xml",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/sitemap.xml"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "item": [
+        {
+          "name": "GET /blog",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/magiya-dvizheniya-5-skrytyh-geroev",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/magiya-dvizheniya-5-skrytyh-geroev"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/mineralka-polusintetika-ili-sintetika-v-chem-raznica",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/mineralka-polusintetika-ili-sintetika-v-chem-raznica"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/chto-znachat-cifry-na-kanistre-polnyj-gid-po-vyazkosti",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/chto-znachat-cifry-na-kanistre-polnyj-gid-po-vyazkosti"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/magic-of-motion-5-hidden-heroes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/magic-of-motion-5-hidden-heroes"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/mineral-semi-synthetic-or-synthetic-which-oil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/mineral-semi-synthetic-or-synthetic-which-oil"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /blog/what-do-numbers-on-canister-mean-oil-viscosity-guide",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "https://valescooil.com/blog/what-do-numbers-on-canister-mean-oil-viscosity-guide"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://backend.valescooil.com"
+    }
+  ]
+}

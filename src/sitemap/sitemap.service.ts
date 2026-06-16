@@ -21,18 +21,19 @@ export class SitemapService {
       .get<string>('SITE_URL', 'https://valescooil.com')
       .replace(/\/$/, '');
 
-    const articles = await this.articlesService.findAll();
+    const articles = await this.articlesService.findAllForSitemap();
 
     const staticPages: SitemapUrl[] = [
       { loc: `${siteUrl}/`, changefreq: 'weekly', priority: '1.0' },
-      { loc: `${siteUrl}/blog`, changefreq: 'weekly', priority: '0.9' },
+      { loc: `${siteUrl}/ru/blog`, changefreq: 'weekly', priority: '0.9' },
+      { loc: `${siteUrl}/en/blog`, changefreq: 'weekly', priority: '0.9' },
       { loc: `${siteUrl}/products`, changefreq: 'weekly', priority: '0.8' },
       { loc: `${siteUrl}/about`, changefreq: 'monthly', priority: '0.7' },
       { loc: `${siteUrl}/contact`, changefreq: 'monthly', priority: '0.7' },
     ];
 
     const articlePages: SitemapUrl[] = articles.map((article) => ({
-      loc: `${siteUrl}/blog/${article.slug}`,
+      loc: `${siteUrl}/${article.language}/blog/${article.slug}`,
       changefreq: 'monthly',
       priority: '0.8',
       lastmod: article.createdAt

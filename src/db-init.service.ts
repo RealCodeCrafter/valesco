@@ -10,9 +10,10 @@ export class DbInitService implements OnModuleInit {
   constructor(private readonly dataSource: DataSource) {}
 
   async onModuleInit() {
-    // Bu yerda SQL fayllarni avtomatik ishga tushiramiz
     await this.runSqlFile('create_articles_table.sql');
+    await this.runSqlFile('alter_articles_add_language.sql');
     await this.runSqlFile('seed_articles.sql');
+    await this.runSqlFile('seed_articles_en.sql');
   }
 
   private async runSqlFile(fileName: string) {

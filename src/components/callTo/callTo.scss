@@ -1,0 +1,144 @@
+.callTo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+
+    &-title {
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 58px;
+      color: #333331;
+      width: 80%;
+    }
+
+    &-text {
+      font-size: 20px;
+      font-weight: 400;
+      color: gray;
+      line-height: 26px;
+      width: 80%;
+    }
+  }
+
+  &__right {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+  }
+
+  &__card {
+    position: relative;
+    border: 1px solid #aaa6;
+    border-radius: 10px;
+    height: 250px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 10px;
+
+    &-title {
+      font-size: 20px;
+      line-height: 26px;
+      color: #333331;
+      font-weight: 500;
+    }
+
+    &-text {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+  }
+
+  &__card:hover {
+    background-color: #333331;
+    transition: .5s;
+  }
+
+  &__card:hover .callTo__card-title {
+    color: white;
+    transition: .5s;
+  }
+
+  &__card:hover .callTo__card-text {
+    color: white;
+    transition: .5s;
+  }
+
+  @media (max-width: 1200px) {
+    &__left-title {
+      font-size: 32px;
+      line-height: 40px;
+    }
+
+    &__left-text {
+      font-size: 16px;
+    }
+
+    &__card-title {
+      font-size: 16px;
+      font-weight: 400;
+      color: #333331;
+      line-height: 22px;
+    }
+
+    &__card {
+      height: 220px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+  }
+
+  @media (max-width:500px) {
+    &__left-title {
+      font-size: 26px;
+      line-height: 30px;
+      font-weight: 400;
+      text-align: center;
+      width: 100%;
+    }
+
+    &__left {
+      gap: 20px;
+    }
+
+    &__left-text {
+      width: 100%;
+      text-align: center;
+      line-height: 24px;
+    }
+  }
+
+  @media (max-width:410px) {
+    &__right {
+      grid-template-columns: 1fr;
+    }
+
+    &__left-title {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 400;
+    }
+
+    &__left-text {
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 300;
+    }
+  }
+}

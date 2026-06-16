@@ -6,6 +6,7 @@ const articles = [
     title:
       'Магия движения: 5 скрытых героев, которые спасают ваш автомобиль каждый день',
     slug: 'magiya-dvizheniya-5-skrytyh-geroev',
+    language: 'ru',
     description:
       'Разбираем 5 технических жидкостей, без которых автомобиль не сможет работать: моторное масло, трансмиссионная жидкость, антифриз, тормозная и гидравлическая жидкости. Советы от Valesco Oil.',
     metaTitle:
@@ -66,6 +67,7 @@ const articles = [
     title:
       'Минералка, полусинтетика или синтетика? В чем разница и какое масло нужно именно вашему автомобилю',
     slug: 'mineralka-polusintetika-ili-sintetika-v-chem-raznica',
+    language: 'ru',
     description:
       'Разбираем разницу между минеральным, полусинтетическим и синтетическим моторным маслом. Какое масло подходит для вашего автомобиля — советы экспертов Valesco Oil.',
     metaTitle:
@@ -133,6 +135,7 @@ const articles = [
     title:
       'Что значат цифры на канистре? Полный гид по вязкости моторных масел: 5W-30, 10W-40, 15W-40',
     slug: 'chto-znachat-cifry-na-kanistre-polnyj-gid-po-vyazkosti',
+    language: 'ru',
     description:
       'Полный гид по вязкости моторных масел SAE: что означают 5W-30, 10W-40, 15W-40. Как расшифровать цифры на канистре и выбрать правильное масло — Valesco Oil.',
     metaTitle:
@@ -199,9 +202,9 @@ function escapeSql(value) {
 
 const inserts = articles
   .map(
-    (a) => `INSERT INTO "articles" ("title", "slug", "description", "content", "metaTitle", "metaDescription", "published")
-SELECT '${escapeSql(a.title)}', '${escapeSql(a.slug)}', '${escapeSql(a.description)}', '${escapeSql(a.content)}', '${escapeSql(a.metaTitle)}', '${escapeSql(a.metaDescription)}', true
-WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = '${escapeSql(a.slug)}');`,
+    (a) => `INSERT INTO "articles" ("title", "slug", "language", "description", "content", "metaTitle", "metaDescription", "published")
+SELECT '${escapeSql(a.title)}', '${escapeSql(a.slug)}', '${escapeSql(a.language)}', '${escapeSql(a.description)}', '${escapeSql(a.content)}', '${escapeSql(a.metaTitle)}', '${escapeSql(a.metaDescription)}', true
+WHERE NOT EXISTS (SELECT 1 FROM "articles" WHERE "slug" = '${escapeSql(a.slug)}' AND "language" = '${escapeSql(a.language)}');`,
   )
   .join('\n\n');
 

@@ -1,0 +1,141 @@
+.hero {
+  padding-top: 110px;
+  position: relative;
+
+  .hero-swiper {
+    width: 100%;
+    height: 700px;
+
+    img {
+      width: 100%;
+      height: 700px;
+      object-fit: contain;
+    }
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: white;
+  }
+
+  .custom-pagination {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    padding: 0 15px;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+
+  .pagination-line {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: pointer;
+
+    .line-wrapper {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.3);
+      position: relative;
+      overflow: hidden;
+
+      .line-progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0;
+        background: white;
+        transition: width 0.1s linear;
+      }
+    }
+
+    .line-number {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 1px;
+    }
+
+    &.active {
+      .line-wrapper .line-progress {
+        animation: progressBar 4000ms linear forwards;
+      }
+
+      .line-number {
+        color: white;
+      }
+    }
+  }
+
+  @keyframes progressBar {
+    from {
+      width: 0;
+    }
+
+    to {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 1600px) {
+    .hero-swiper {
+      height: 540px;
+
+      img {
+        height: 540px;
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    .custom-pagination {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 780px) {
+    padding-top: 80px;
+
+    .hero-swiper {
+      height: 400px;
+
+      img {
+        height: 400px;
+      }
+    }
+
+    .custom-pagination {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .pagination-line {
+      .line-number {
+        font-size: 12px;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    .hero-swiper {
+      height: 300px;
+      padding-top: 10px;
+
+      img {
+        height: 300px;
+      }
+    }
+
+    .custom-pagination {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+  }
+}

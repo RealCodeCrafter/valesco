@@ -1,0 +1,47 @@
+What Do the Numbers on the Canister Mean? A Complete Guide to Motor Oil Viscosity: 5W-30, 10W-40, 15W-40
+When visiting an auto parts store or choosing oil on a website, every car owner sees mysterious combinations on the canisters: 5W-30, 10W-40, 15W-40. For many, it is just a set of numbers, but this very code encrypts the main parameter of your engine's health — viscosity.
+What do these letters and numbers mean? How do you decode the SAE classification? And what happens if you pour in the "wrong" oil? The experts at Valesco Oil have prepared a detailed and easy-to-understand guide that will settle this question once and for all.
+What is the SAE Classification?
+The letters SAE on a canister mean that the oil's viscosity was measured according to the standard of the Society of Automotive Engineers (USA). This is an international standard that divides oils into winter, summer, and all-season types.
+Today, practically all civilian motor oils are all-season. This is precisely why their marking consists of two numbers with the letter "W" between them.
+Let’s break down the popular 5W-30 oil into its components:
+1. The First Number and the Letter "W" (Winter Index)
+The letter W stands for Winter. The number standing before it indicates the low-temperature properties of the oil. It shows how easily the engine will start in freezing weather and how quickly the pump will circulate the oil through the system to all moving parts.
+Simple Formula: To find out the minimum temperature at which the oil pump can circulate the fluid, you need to subtract 35 from the first digit.
+0W: ($0 - 35 = -35^\circ\text{C}$) — extreme frosts.
+5W: ($5 - 35 = -30^\circ\text{C}$) — excellent startup in average winter conditions.
+10W: ($10 - 35 = -25^\circ\text{C}$) — moderate winter, highly popular in the CIS region.
+15W: ($15 - 35 = -20^\circ\text{C}$) — for warm winters or commercial equipment.
+2. The Second Number (Summer Index)
+The number after the hyphen (30, 40, 50) is an indicator of high-temperature viscosity. It specifies how thick the oil remains at the operating temperature of a running engine (around 100°C – 150°C).
+The higher this number, the thicker and stronger the oil film on the components during severe heat or high loads.
+30 — energy-conserving oils for modern Japanese, Korean, and certain European cars.
+40 — the classic "gold standard," providing robust protection at high temperatures.
+50 / 60 — thick oils for sports cars or heavily worn engines.
+Breakdown of Popular Classes: What’s the Difference?
+Let's compare the three most common viscosity classes that car owners search for most frequently:
+Viscosity Class
+Base Type (Most Common)
+Temperature Range (°C)
+Who is it for?
+5W-30
+Synthetic
+From -30 to +35
+Modern engines (many new cars from dealerships) where clearances between components are minimal.
+10W-40
+Semi-synthetic
+From -25 to +40
+The most popular choice for vehicles with a mileage over 100k-150k km. An excellent balance of price and protection.
+15W-40
+Mineral / Semi-synthetic
+From -20 to +45
+Commercial transport, trucks, old diesel engines, or regions with an exclusively hot climate.
+Main Myths About Oil Viscosity
+Myth 1: "The thicker the oil, the better it is for the engine."
+Reality: If you pour 10W-60 oil into a modern engine designed for 5W-30, the fluid will be too thick to pass through narrow oil channels. The engine will experience "oil starvation" and quickly fail.
+Myth 2: "You must switch to 10W-40 in the summer and to 5W-30 in the winter."
+Reality: Modern all-season oils (such as the lineup from Valesco Oil) operate stably all year round. You should only change viscosity if it is recommended by your vehicle manufacturer.
+Which Viscosity to Choose for Your Car?
+The golden rule for any car owner is to always look into the vehicle's service manual. The engineers who created your engine have already calculated the ideal clearances and specified the required SAE index.
+If your vehicle requires stable protection during both a freezing winter startup and scorching summer heat, check out the range of lubricants from Valesco Oil. Our catalog features motor oils of all popular viscosity classes, created on the basis of premium base oils and modern additive packages.
+Valesco Oil — ideal viscosity and maximum protection for your engine under any conditions!

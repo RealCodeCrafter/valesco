@@ -1,0 +1,157 @@
+.footer {
+  padding-bottom: 20px;
+  background-color: rgb(234, 234, 234);
+
+  &__nav {
+    display: grid;
+    grid-template-columns: 300px 220px 1fr 300px;
+    grid-gap: 40px;
+    padding-top: 40px;
+  }
+
+  @media (max-width:1580px) {
+    &__nav {
+      grid-template-columns: 300px 200px 1fr 350px;
+    }
+  }
+
+  &__nav-logo {
+    img {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &-title {
+      font-size: 24px;
+      font-weight: 500;
+      color: black;
+      padding-bottom: 12px;
+    }
+
+    &-list {
+      font-size: 16px;
+      line-height: 20px;
+      padding: 6px 0px;
+    }
+
+    &-contact {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      font-size: 17px;
+      line-height: 24px;
+      font-weight: 400;
+      color: black;
+
+      &-span {
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #111333;
+      line-height: 32px;
+    }
+
+    input {
+      padding: 12px;
+      outline: none;
+      border: 1px solid #aaa9;
+      border-radius: 3px;
+    }
+
+    textarea {
+      height: 60px;
+      resize: vertical;
+      outline: none;
+      border: 1px solid #aaa9;
+      padding: 10px;
+      border-radius: 3px;
+    }
+
+    &-btn {
+      width: 160px;
+      padding: 12px;
+      border-radius: 12px;
+      background-color: rgb(42, 42, 40);
+      border: 1px solid rgb(42, 42, 40);
+      color: white;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .react-tel-input .country-list {
+    width: 350px;
+    border-radius: 4px;
+  }
+
+  .react-tel-input .country-list .search-box {
+    width: 100%;
+  }
+
+  .react-tel-input .country-list .search {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    padding: 10px 10px;
+  }
+
+  @media (max-width:1190px) {
+    &__nav {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+  }
+
+  @media (max-width:960px) {
+    &__nav {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px 20px;
+    }
+  }
+
+  @media (max-width:550px) {
+    &__nav {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 350px) {
+
+    &__nav {
+      padding-top: 20px;
+    }
+
+    &__item-title {
+      font-size: 20px;
+      padding-bottom: 6px;
+    }
+
+    &__item-list {
+      font-size: 14px;
+      padding: 2px 0px;
+    }
+  }
+}

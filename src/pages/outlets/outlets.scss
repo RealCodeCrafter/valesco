@@ -1,0 +1,421 @@
+.outlets {
+    &-top {
+        padding-top: 140px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 60px;
+
+        &-title {
+            font-size: 42px;
+            font-weight: 500;
+            color: #333331;
+            line-height: 58px;
+            text-transform: uppercase;
+        }
+
+        &-info {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: flex-start;
+
+            &-title {
+                font-size: 24px;
+                line-height: 32px;
+                font-weight: 400;
+                color: #333331;
+            }
+
+            &-text {
+                font-size: 18px;
+                font-weight: 300;
+                line-height: 26px;
+                color: gray;
+            }
+        }
+
+        @media (max-width:1210px) {
+            &-title {
+                font-size: 24px;
+                line-height: 32px;
+            }
+
+            &-info {
+                gap: 10px;
+            }
+
+            &-info-title {
+                font-size: 18px;
+                line-height: 24px;
+            }
+
+            &-info-text {
+                font-size: 16px;
+                line-height: 20px;
+            }
+        }
+
+        @media (max-width:740px) {
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width:400px) {
+            &-title {
+                font-size: 16px;
+                line-height: 20px;
+                text-align: center;
+            }
+
+            &-info-title {
+                font-size: 14px;
+                line-height: 18px;
+                text-align: center;
+            }
+
+            &-info-text {
+                font-size: 14px;
+                line-height: 18px;
+                text-align: center;
+            }
+        }
+    }
+
+    &-middle {
+        padding-top: 60px;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 60px;
+
+        &-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333331;
+            line-height: 32px;
+            width: 70%;
+        }
+
+        &-info {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+
+            &-text {
+                font-size: 18px;
+                font-weight: 400;
+                color: gray;
+                line-height: 24px;
+            }
+        }
+
+        .css-rizt0-MuiTypography-root {
+            padding: 0px;
+        }
+    }
+
+    &-accardion {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        &-item {
+            border: none;
+            border-radius: 12px !important;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            transition: all 0.3s ease;
+
+            .MuiAccordionSummary-root {
+                background: linear-gradient(135deg, #f5f7fa, #e4ebf1);
+                font-weight: 600;
+                color: #333;
+                transition: background 0.3s ease;
+
+                &:hover {
+                    background: linear-gradient(135deg, #eaf0f6, #dce4ed);
+                }
+
+                .MuiTypography-root {
+                    font-size: 16px;
+                }
+            }
+
+            .MuiAccordionDetails-root {
+                padding: 15px 20px;
+                font-size: 14px;
+                line-height: 1.5;
+                color: #555;
+                background: #fafafa;
+                border-top: 1px solid #eee;
+            }
+        }
+    }
+
+    &-markets {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 60px;
+        padding-top: 60px;
+
+        &-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333331;
+            line-height: 32px;
+            width: 80%;
+        }
+
+        &-info {
+            &-text {
+                font-size: 18px;
+                font-weight: 400;
+                color: gray;
+                line-height: 26px;
+                padding-bottom: 40px;
+            }
+        }
+
+        .css-rizt0-MuiTypography-root {
+            padding: 0px;
+        }
+    }
+
+    &-partners {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 60px;
+        padding-top: 50px;
+
+        &-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333331;
+            line-height: 34px;
+        }
+
+        &-info {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+
+            &-text {
+                font-size: 18px;
+                font-weight: 400;
+                color: gray;
+                line-height: 28px;
+            }
+        }
+    }
+
+    &-bottom {
+        background-color: #333;
+        padding: 80px 0px;
+        margin-top: 50px;
+
+        &-black {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-gap: 60px;
+
+            &-title {
+                font-size: 26px;
+                font-weight: 400;
+                color: white;
+            }
+
+            &-info {
+                display: flex;
+                align-items: center;
+                gap: 50px;
+
+                &-title {
+                    font-size: 18px;
+                    font-weight: 400;
+                    line-height: 28px;
+                    color: gray;
+                    width: 60%;
+                }
+
+                &-btn {
+                    width: 300px;
+                    padding: 17px 10px;
+                    border-radius: 40px;
+                    border: 1px solid white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                    cursor: pointer;
+                    font-size: 15px;
+                }
+
+                &-btn:hover {
+                    background-color: #333331;
+                    color: white;
+                    transition: .6s;
+                }
+            }
+        }
+    }
+
+    @media (max-width:1050px) {
+        &-middle-title {
+            font-size: 22px;
+            line-height: 30px;
+            width: 100%;
+        }
+    }
+
+    @media (max-width:1000px) {
+        &-middle {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        &-middle-info {
+            gap: 10px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        &-markets-title {
+            font-size: 22px;
+            line-height: 26px;
+            width: 100%;
+        }
+
+        &-markets-info-text {
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+        &-markets {
+            grid-template-columns: 1fr;
+        }
+
+        &-partners {
+            grid-template-columns: 1fr;
+            grid-gap: 10px;
+        }
+
+        &-partners-info {
+            gap: 10px;
+        }
+
+        &-bottom-black {
+            grid-template-columns: 1fr;
+        }
+
+        &-bottom-black {
+            gap: 10px;
+        }
+    }
+
+    @media (max-width:800px) {
+        .css-yfrx4k-MuiAccordionSummary-content {
+            padding: 0px;
+        }
+
+        .css-rizt0-MuiTypography-root {
+            font-size: 14px !important;
+        }
+
+        &-middle-info-text {
+            font-size: 14px !important;
+            line-height: 18px;
+        }
+    }
+
+    @media (max-width:680px) {
+        &-markets {
+            gap: 10px;
+            grid-template-columns: 1fr;
+            padding-top: 20px;
+        }
+    }
+
+    @media (max-width:570px) {
+        &-bottom-black-title {
+            font-size: 20px;
+            line-height: 22px;
+            text-align: center;
+        }
+
+        &-bottom-black-info {
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        &-bottom-black-info-title {
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        &-bottom-black-info-btn {
+            width: 220px;
+            padding: 10px;
+        }
+
+        &-bottom {
+            padding: 40px 0px;
+        }
+    }
+
+    @media (max-width: 400px) {
+        &-middle-title {
+            font-size: 18px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        &-middle {
+            padding-top: 20px;
+            gap: 10px;
+        }
+
+        &-accardion {
+            gap: 10px;
+        }
+
+        &-middle-info-text {
+            font-size: 14px !important;
+            text-align: center;
+        }
+
+        &-markets-title {
+            font-size: 16px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        &-markets-info-text {
+            text-align: center;
+            padding-bottom: 10px;
+            font-size: 14px;
+            line-height: 18px;
+        }
+
+        &-partners-title {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        &-partners-info-text {
+            font-size: 16px;
+            line-height: 22px;
+            text-align: center;
+        }
+
+        .css-rizt0-MuiTypography-root {
+            padding: 6px;
+        }
+
+        &-partners {
+            padding-top: 10px;
+        }
+    }
+}

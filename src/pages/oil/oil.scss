@@ -1,0 +1,254 @@
+.oil {
+    &-top {
+        padding-top: 150px;
+
+        &-title {
+            font-size: 52px;
+            font-weight: 500;
+            line-height: 54px;
+            color: #333331;
+            width: 30%;
+        }
+    }
+
+    &-dannim {
+        display: grid;
+        grid-template-columns: 1.6fr 2fr;
+        grid-gap: 20px;
+        padding-top: 70px;
+
+        &-title {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 40px;
+            color: #333331;
+        }
+
+        &-selects {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            margin: 0 auto;
+
+            &-title {
+                font-size: 22px;
+                font-weight: 400;
+                color: gray;
+                line-height: 26px;
+                padding-bottom: 20px;
+            }
+        }
+
+        &-select {
+            width: 100%;
+            padding: 26px 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 18px;
+            background-color: white;
+            color: #333;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 10px;
+            cursor: pointer;
+
+            &:focus {
+                outline: none;
+                border-color: #aaa;
+            }
+
+            option {
+                color: #333;
+            }
+        }
+
+        &-button {
+            padding: 22px;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            background-color: transparent;
+            font-size: 18px;
+            color: #999;
+            cursor: not-allowed;
+        }
+    }
+
+    &-analog {
+        display: grid;
+        grid-template-columns: 1.6fr 2fr;
+        grid-gap: 20px;
+        padding-top: 70px;
+
+        &-title {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 40px;
+            color: #333331;
+        }
+
+        &-selects {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            margin: 0 auto;
+
+            &-title {
+                font-size: 20px;
+                font-weight: 400;
+                color: gray;
+                line-height: 24px;
+                padding-bottom: 20px;
+            }
+
+            &-bottom-title {
+                font-size: 16px;
+                font-weight: 400;
+                color: gray;
+                line-height: 24px;
+                padding-bottom: 20px;
+            }
+        }
+
+        &-select {
+            width: 100%;
+            padding: 26px 20px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 18px;
+            background-color: white;
+            color: #333;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 10px;
+            cursor: pointer;
+
+            &:focus {
+                outline: none;
+                border-color: #aaa;
+            }
+
+            option {
+                color: #333;
+            }
+        }
+
+        &-button {
+            padding: 22px;
+            border: 1px solid #ccc;
+            border-radius: 50px;
+            background-color: transparent;
+            font-size: 18px;
+            color: #999;
+            cursor: not-allowed;
+        }
+    }
+
+    @media (max-width:1300px) {
+        &-top-title {
+            width: 100%;
+        }
+    }
+
+    @media (max-width:760px) {
+
+        &-analog,
+        &-dannim {
+            grid-template-columns: 1fr 2fr;
+        }
+
+        &-analog-title,
+        &-dannim-title {
+            font-size: 30px;
+            line-height: 36px;
+            font-weight: 400;
+        }
+
+        &-analog-selects-title,
+        &-dannim-selects-title {
+            font-size: 20px;
+            line-height: 26px;
+            padding-bottom: 0px;
+        }
+    }
+
+    @media (max-width: 600px) {
+
+        &-analog,
+        &-dannim {
+            grid-template-columns: 1fr;
+            padding-top: 20px;
+        }
+
+        &-top {
+            padding-top: 130px;
+        }
+
+        &-top-title {
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 36px;
+            text-align: center;
+        }
+    }
+
+    @media (max-width:450px) {
+
+        &-analog-title,
+        &-dannim-title {
+            font-size: 22px;
+            font-weight: 400;
+            line-height: 26px;
+            text-align: center;
+        }
+
+        &-analog,
+        &-dannim {
+            gap: 10px;
+        }
+
+        &-analog-selects-title,
+        &-dannim-selects-title {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 22px;
+            text-align: center;
+        }
+
+        &-analog-select,
+        &-dannim-select {
+            padding: 16px 10px;
+            font-size: 14px;
+        }
+
+        &-analog-selects,
+        &-dannim-selects {
+            gap: 10px;
+        }
+
+        &-analog-button,
+        &-dannim-button {
+            padding: 15px 10px;
+        }
+
+        &-analog-selects-bottom-title {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 18px;
+            text-align: center;
+        }
+    }
+
+    @media (max-width: 350px) {
+        &-top-title {
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 26px;
+        }
+    }
+}

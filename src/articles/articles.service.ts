@@ -10,14 +10,15 @@ export class ArticlesService {
     private articlesRepository: Repository<Article>,
   ) {}
 
-  async findAll(): Promise<Article[]> {
+  async findAll(lang = 'ru'): Promise<Article[]> {
     return this.articlesRepository.find({
-      where: { published: true },
+      where: { published: true, language: lang },
       order: { createdAt: 'DESC' },
       select: [
         'id',
         'title',
         'slug',
+        'language',
         'description',
         'image',
         'metaTitle',
@@ -27,9 +28,17 @@ export class ArticlesService {
     });
   }
 
-  async findBySlug(slug: string): Promise<Article> {
+  async findAllForSitemap(): Promise<Article[]> {
+    return this.articlesRepository.find({
+      where: { published: true },
+      order: { createdAt: 'DESC' },
+      select: ['slug', 'language', 'createdAt'],
+    });
+  }
+
+  async findBySlug(slug: string, lang = 'ru'): Promise<Article> {
     const article = await this.articlesRepository.findOne({
-      where: { slug, published: true },
+      where: { slug, language: lang, published: true },
     });
 
     if (!article) {
