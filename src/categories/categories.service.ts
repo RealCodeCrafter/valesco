@@ -63,6 +63,9 @@ async findOne(id: number): Promise<Category> {
   category.products.sort((a, b) => {
     const orderA = a.sortOrder ?? 0;
     const orderB = b.sortOrder ?? 0;
+    const rankedA = orderA > 0 ? 0 : 1;
+    const rankedB = orderB > 0 ? 0 : 1;
+    if (rankedA !== rankedB) return rankedA - rankedB;
     if (orderA !== orderB) return orderA - orderB;
     return a.id - b.id;
   });

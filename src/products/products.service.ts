@@ -110,7 +110,8 @@ export class ProductsService {
     }
 
     return await query
-      .orderBy('product.sortOrder', 'ASC')
+      .orderBy('(CASE WHEN product.sortOrder > 0 THEN 0 ELSE 1 END)', 'ASC')
+      .addOrderBy('product.sortOrder', 'ASC')
       .addOrderBy('product.id', 'ASC')
       .getMany();
   }
