@@ -65,6 +65,13 @@ export class ProductsController {
       });
     }
 
+    // multipart form-data sends numbers as strings — normalize sortOrder
+    const rawSort = (createProductDto as any).sortOrder;
+    if (rawSort !== undefined && rawSort !== null && rawSort !== '') {
+      const parsed = Number(rawSort);
+      createProductDto.sortOrder = Number.isFinite(parsed) ? parsed : 0;
+    }
+
     const uploadedFiles = { images: imageUrls, documents: documentUrls };
     return this.productsService.create(createProductDto, uploadedFiles);
   }

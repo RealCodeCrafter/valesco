@@ -99,7 +99,12 @@ export class UpdateProductDto {
   categoryId?: number;
 
   @IsOptional()
-  @Transform(({ value }) => (typeof value === 'string' ? parseInt(value, 10) : value))
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === '') return undefined;
+    const n = typeof value === 'string' ? parseInt(value, 10) : Number(value);
+    return Number.isFinite(n) ? n : undefined;
+  })
+  @Type(() => Number)
   @IsNumber()
   sortOrder?: number;
 }

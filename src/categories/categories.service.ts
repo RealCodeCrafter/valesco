@@ -51,25 +51,21 @@ export class CategoriesService {
 
 
 async findOne(id: number): Promise<Category> {
-  const category = await this.categoriesRepository.findOne({
-    where: { id },
-    relations: ['products'],
-  });
+  const category = await this.categoriesRepository
+    .createQueryBuilder('category')
+    .leftJoinAndSelect('category.products', 'product')
+    .where('category.id = :id', { id })
+    // sortOrder > 0 first (1,2,3...), then unset (0) at the end
+    .orderBy('CASE WHEN COALESCE(product.sortOrder, 0) > 0 THEN 0 ELSE 1 END', 'ASC')
+    .addOrderBy('product.sortOrder', 'ASC')
+    .addOrderBy('product.id', 'ASC')
+    .getOne();
 
   if (!category) {
     throw new NotFoundException('Category not found');
   }
 
-  category.products.sort((a, b) => {
-    const orderA = a.sortOrder ?? 0;
-    const orderB = b.sortOrder ?? 0;
-    const rankedA = orderA > 0 ? 0 : 1;
-    const rankedB = orderB > 0 ? 0 : 1;
-    if (rankedA !== rankedB) return rankedA - rankedB;
-    if (orderA !== orderB) return orderA - orderB;
-    return a.id - b.id;
-  });
-
+  category.products = category.products ?? [];
   return category;
 }
 

@@ -25,6 +25,7 @@ export class ProductsService {
         throw new BadRequestException(`Category with ID ${createProductDto.categoryId} does not exist`);
       }
 
+      const sortOrder = Number(createProductDto.sortOrder);
       const product = transactionalEntityManager.create(Product, {
         title: createProductDto.title,
         description_ru: createProductDto.description_ru || '',
@@ -43,7 +44,7 @@ export class ProductsService {
         info: createProductDto.info || [],
         packing: createProductDto.packing || [],
         category,
-        sortOrder: createProductDto.sortOrder ?? 0,
+        sortOrder: Number.isFinite(sortOrder) ? sortOrder : 0,
       });
 
       try {
@@ -195,8 +196,11 @@ export class ProductsService {
       product.category = category;
     }
 
-    if (updateProductDto.sortOrder !== undefined) {
-      product.sortOrder = updateProductDto.sortOrder;
+    if (updateProductDto.sortOrder !== undefined && updateProductDto.sortOrder !== null) {
+      const sortOrder = Number(updateProductDto.sortOrder);
+      if (Number.isFinite(sortOrder)) {
+        product.sortOrder = sortOrder;
+      }
     }
 
     try {

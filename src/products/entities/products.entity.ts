@@ -64,6 +64,6 @@ export class Product {
   updateOrder: number;
 
   /** Manual display order inside a category (1 = first, 2 = second, ...) */
-  @Column({ type: 'int', default: 0 })
+  @Column({ name: 'sortOrder', type: 'int', default: 0 })
   sortOrder: number;
 }
