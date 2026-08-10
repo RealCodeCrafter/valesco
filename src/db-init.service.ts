@@ -14,6 +14,7 @@ export class DbInitService implements OnModuleInit {
     await this.runSqlFile('alter_articles_add_language.sql');
     await this.runSqlFile('seed_articles.sql');
     await this.runSqlFile('seed_articles_en.sql');
+    await this.runSqlFile('alter_products_add_sort_order.sql');
   }
 
   private splitSqlStatements(sql: string): string[] {

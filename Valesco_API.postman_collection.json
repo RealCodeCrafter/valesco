@@ -1,0 +1,490 @@
+{
+  "info": {
+    "_postman_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "name": "Valesco API",
+    "description": "Valesco backend API collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://backend.valescooil.com" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  if (json.accessToken) pm.collectionVariables.set('token', json.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Create Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newadmin\",\n  \"password\": \"password\",\n  \"sites\": [\"valesco\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/admin", "host": ["{{baseUrl}}"], "path": ["admin"] }
+          }
+        },
+        {
+          "name": "List Admins",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/admin", "host": ["{{baseUrl}}"], "path": ["admin"] }
+          }
+        },
+        {
+          "name": "Update Admin",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"updatedadmin\",\n  \"password\": \"newpassword\",\n  \"sites\": [\"valesco\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Admin",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/admin/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Product Name", "type": "text" },
+                { "key": "categoryId", "value": "1", "type": "text" },
+                { "key": "sortOrder", "value": "1", "type": "text" },
+                { "key": "description_ru", "value": "Описание", "type": "text" },
+                { "key": "description_en", "value": "Description", "type": "text" },
+                { "key": "specifications", "value": "[\"spec1\", \"spec2\"]", "type": "text" },
+                { "key": "sae", "value": "[\"5W-30\"]", "type": "text" },
+                { "key": "density", "value": "[\"0.85\"]", "type": "text" },
+                { "key": "kinematic_one", "value": "[\"10\"]", "type": "text" },
+                { "key": "kinematic_two", "value": "[\"50\"]", "type": "text" },
+                { "key": "viscosity", "value": "[\"150\"]", "type": "text" },
+                { "key": "flash", "value": "[\"220\"]", "type": "text" },
+                { "key": "temperature", "value": "[\"-35\"]", "type": "text" },
+                { "key": "base", "value": "[\"synthetic\"]", "type": "text" },
+                { "key": "info", "value": "[\"info1\"]", "type": "text" },
+                { "key": "packing", "value": "[{\"volume\": \"1L\", \"article\": \"ART-001\"}]", "type": "text" },
+                { "key": "image", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/products", "host": ["{{baseUrl}}"], "path": ["products"] }
+          }
+        },
+        {
+          "name": "List Products",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products?categoryId=",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "categoryId", "value": "", "disabled": true },
+                { "key": "line", "value": "", "disabled": true },
+                { "key": "viscosity", "value": "", "disabled": true },
+                { "key": "approval", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/search?query=ZIC",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "search"],
+              "query": [{ "key": "query", "value": "ZIC" }]
+            }
+          }
+        },
+        {
+          "name": "Get Product",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Updated Product", "type": "text" },
+                { "key": "categoryId", "value": "1", "type": "text" },
+                { "key": "sortOrder", "value": "1", "type": "text" },
+                { "key": "description_ru", "value": "Обновленное описание", "type": "text" },
+                { "key": "description_en", "value": "Updated description", "type": "text" },
+                { "key": "specifications", "value": "[\"spec1\"]", "type": "text" },
+                { "key": "sae", "value": "[\"5W-40\"]", "type": "text" },
+                { "key": "packing", "value": "[{\"volume\": \"4L\", \"article\": \"ART-002\"}]", "type": "text" },
+                { "key": "image", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Product File",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fileUrl\": \"https://backend.valescooil.com/uploads/products/example.jpg\",\n  \"fileType\": \"image\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:id/file",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id", "file"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title_ru", "value": "Категория", "type": "text" },
+                { "key": "title_en", "value": "Category", "type": "text" },
+                { "key": "img", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "List Categories",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Get Category",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title_ru", "value": "Обновленная категория", "type": "text" },
+                { "key": "title_en", "value": "Updated Category", "type": "text" },
+                { "key": "img", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "News",
+      "item": [
+        {
+          "name": "Create News",
+          "request": {
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "News Title", "type": "text" },
+                { "key": "description", "value": "Short description", "type": "text" },
+                { "key": "date", "value": "2026-08-10", "type": "text" },
+                { "key": "fullContent", "value": "Full news content", "type": "text" },
+                { "key": "img", "type": "file", "src": [] },
+                { "key": "image", "type": "file", "src": [] },
+                { "key": "video", "type": "file", "src": [] }
+              ]
+            },
+            "url": { "raw": "{{baseUrl}}/news", "host": ["{{baseUrl}}"], "path": ["news"] }
+          }
+        },
+        {
+          "name": "List News",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/news", "host": ["{{baseUrl}}"], "path": ["news"] }
+          }
+        },
+        {
+          "name": "Get News",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/news/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["news", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Update News",
+          "request": {
+            "method": "PUT",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "title", "value": "Updated News", "type": "text" },
+                { "key": "description", "value": "Updated description", "type": "text" },
+                { "key": "date", "value": "2026-08-10", "type": "text" },
+                { "key": "fullContent", "value": "Updated full content", "type": "text" },
+                { "key": "img", "type": "file", "src": [] },
+                { "key": "image", "type": "file", "src": [] },
+                { "key": "video", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/news/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["news", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "Delete News",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/news/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["news", ":id"],
+              "variable": [{ "key": "id", "value": "1" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Articles",
+      "item": [
+        {
+          "name": "List Articles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/articles?lang=ru",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "articles"],
+              "query": [{ "key": "lang", "value": "ru" }]
+            }
+          }
+        },
+        {
+          "name": "Get Article",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/articles/:slug?lang=ru",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "articles", ":slug"],
+              "query": [{ "key": "lang", "value": "ru" }],
+              "variable": [{ "key": "slug", "value": "example-slug" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact",
+      "item": [
+        {
+          "name": "Submit Contact",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"phone\": \"+998901234567\",\n  \"email\": \"john@example.com\",\n  \"country\": \"Uzbekistan\",\n  \"company\": \"Company Name\",\n  \"message\": \"Hello, I have a question.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/contact", "host": ["{{baseUrl}}"], "path": ["contact"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Upload File",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "file", "type": "file", "src": [] }]
+            },
+            "url": { "raw": "{{baseUrl}}/upload", "host": ["{{baseUrl}}"], "path": ["upload"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sitemap",
+      "item": [
+        {
+          "name": "Get Sitemap",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sitemap.xml",
+              "host": ["{{baseUrl}}"],
+              "path": ["sitemap.xml"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

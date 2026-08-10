@@ -43,6 +43,7 @@ export class ProductsService {
         info: createProductDto.info || [],
         packing: createProductDto.packing || [],
         category,
+        sortOrder: createProductDto.sortOrder ?? 0,
       });
 
       try {
@@ -109,8 +110,7 @@ export class ProductsService {
     }
 
     return await query
-      .orderBy('(CASE WHEN product.updateOrder > 0 THEN 0 ELSE 1 END)', 'ASC')
-      .addOrderBy('product.updateOrder', 'ASC')
+      .orderBy('product.sortOrder', 'ASC')
       .addOrderBy('product.id', 'ASC')
       .getMany();
   }
@@ -192,6 +192,10 @@ export class ProductsService {
         throw new BadRequestException(`Category with ID ${updateProductDto.categoryId} does not exist`);
       }
       product.category = category;
+    }
+
+    if (updateProductDto.sortOrder !== undefined) {
+      product.sortOrder = updateProductDto.sortOrder;
     }
 
     try {
